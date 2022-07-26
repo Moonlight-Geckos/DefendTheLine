@@ -1,0 +1,18 @@
+{
+    "name": "ColoredHeaderCreator.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:295d7217cd0e91c4a88a5949f6c5e60e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
