@@ -55,7 +55,6 @@ public class GridManager : MonoBehaviour
         else
         {
             _grid[index.Item1, index.Item2].Merge();
-            blob.Dispose();
         }
         _emptyCells.Remove(IndexToHash(index.Item1, index.Item2));
         SetupEmptyCells();
@@ -96,38 +95,50 @@ public class GridManager : MonoBehaviour
         int j_inc = direction == SwipeDirection.Left ? 1 : -1;
         int si = direction == SwipeDirection.Down ? 0 : gridHeight - 1;
         int sj = direction == SwipeDirection.Left ? 0 : gridWidth - 1;
-        bool MakeMove(int i, int j)
+        void MakeMove(int i, int j)
         {
-            int ii, jj;
-            if(direction == SwipeDirection.Down || direction == SwipeDirection.Up)
+            int orgi = i, orgj = j;
+            Tuple<int, int> newPos = null;
+            while (CellIsValid(i, j))
             {
-                ii = i - i_inc;
-                jj = j;
+                if (direction == SwipeDirection.Down || direction == SwipeDirection.Up)
+                {
+                    i -= i_inc;
+                }
+                else
+                {
+                    j -= j_inc;
+                }
+                if (!CellIsValid(i, j))
+                    break;
+                if (_grid[i, j] == null)
+                {
+                    newPos = new Tuple<int, int>(i, j);
+                }
+                else
+                {
+                    if (_grid[i, j].Level == _grid[orgi, orgj].Level)
+                    {
+                        newPos = new Tuple<int, int>(i, j);
+                    }
+                    break;
+                }
             }
-            else
+            if (newPos != null)
             {
-                ii = i;
-                jj = j - j_inc;
+                _grid[orgi, orgj].Move(new Vector3(newPos.Item2, 0, newPos.Item1));
+                AddBlob(_grid[orgi, orgj], newPos);
+                RemoveBlob(new Tuple<int, int>(orgi, orgj));
             }
-            if (!CellIsValid(ii, jj))
-                return false;
-            if (_grid[ii, jj] == null || _grid[i, j].Level == _grid[ii, jj].Level)
-            {
-                _grid[i, j].Move(direction);
-                AddBlob(_grid[i, j], new Tuple<int, int>(ii, jj));
-                return true;
-            }
-            else
-                return false;
         }
 
         for (int i = si;i<gridHeight && i >= 0; i+=i_inc)
         {
             for (int j = sj; j < gridWidth && j >= 0; j += j_inc)
             {
-                if (_grid[i, j] != null && MakeMove(i, j))
+                if (_grid[i, j] != null)
                 {
-                    RemoveBlob(new Tuple<int,int>(i, j));
+                    MakeMove(i, j);
                 }
             }
         }

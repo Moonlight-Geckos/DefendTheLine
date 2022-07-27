@@ -20,6 +20,7 @@ public class BlobSpawner : MonoBehaviour
         { 
             var blob = _blobPool.Pool.Get();
             blob.transform.position = new Vector3(pos.Item2 * 2, 0.5f, pos.Item1 * 2);
+            blob.Initialize();
             _gridManager.AddBlob(blob, pos);
         }
     }

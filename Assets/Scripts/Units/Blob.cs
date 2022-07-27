@@ -38,6 +38,16 @@ public class Blob : MonoBehaviour
 
     #endregion
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name[0] > name[0])
+            Dispose();
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.name[0] > name[0])
+            Dispose();
+    }
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
@@ -52,8 +62,11 @@ public class Blob : MonoBehaviour
         _attackTypes.Add(2, lvl2());
         _attackTypes.Add(3, lvl3());
         _attackTypes.Add(4, lvl4());
-
-        Initialize();
+    }
+    public void Initialize()
+    {
+        _level = 0;
+        SetupBlob();
     }
     public void Dispose()
     {
@@ -61,34 +74,20 @@ public class Blob : MonoBehaviour
             _disposable = GetComponent<IDisposable>();
         _disposable.Dispose();
     }
-    public void Move(SwipeDirection direction)
+    public void Move(Vector3 position)
     {
         IEnumerator move()
         {
             yield return null;
-            Vector3 newPos = transform.position;
-            Vector3 oldPos = transform.position;
-            if (direction == SwipeDirection.Down)
-                newPos.z -= 2;
+            Vector3 newPos = position * 2;
+            newPos.y = 0.5f;
 
-            else if (direction == SwipeDirection.Up)
-                newPos.z += 2;
-
-            else if(direction == SwipeDirection.Left)
-                newPos.x -= 2;
-
-            else
-                newPos.x += 2;
-
-            float duration = 0.2f;
+            float duration =  0.45f - 0.012f * (Vector3.Distance(newPos,transform.position) / 2f );
             float elapsed = 0f;
-            float percent;
             while (elapsed <= duration)
             {
-                elapsed = elapsed + Time.deltaTime;
-                percent = Mathf.Clamp01(elapsed / duration);
-
-                transform.position = Vector3.Lerp(oldPos, newPos, percent);
+                elapsed += Time.deltaTime;
+                transform.position = Vector3.Lerp(transform.position, newPos, elapsed / duration);
                 yield return null;
             }
         }
@@ -97,12 +96,37 @@ public class Blob : MonoBehaviour
     public void Merge()
     {
         _level++;
-        Initialize();
+        SetupBlob();
+        Enrage();
     }
-    private void Initialize()
+    public void Enrage()
     {
-        int ind = Mathf.Min(_level, _dataHolder.BlobsMaterials.Length);
+        IEnumerator enrage()
+        {
+            float duration = 0.1f;
+            float elapsed = 0f;
+            yield return new WaitForSeconds(0.22f);
+            while (elapsed <= duration)
+            {
+                elapsed += Time.deltaTime;
+                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * 1.5f, elapsed / duration);
+                yield return null;
+            }
+            elapsed = 0f;
+            while (elapsed <= duration)
+            {
+                elapsed += Time.deltaTime;
+                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, elapsed / duration);
+                yield return null;
+            }
+        }
+        StartCoroutine(enrage());
+    }
+    private void SetupBlob()
+    {
+        int ind = Mathf.Min(_level, _dataHolder.BlobsMaterials.Length - 1);
         _renderer.material = _dataHolder.BlobsMaterials[ind];
+        name = _level.ToString();
     }
 
     private void Attack(Target target)
