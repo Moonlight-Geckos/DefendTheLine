@@ -9,6 +9,9 @@ public class DataHolder : MonoBehaviour
     [SerializeField]
     private List<SkinItem> allSkins;
 
+    [SerializeField]
+    private Material[] blobsMaterials;
+
     #endregion Public
 
     private static DataHolder _instance;
@@ -20,6 +23,10 @@ public class DataHolder : MonoBehaviour
     public List<SkinItem> AllSkins
     {
         get { return allSkins; }
+    }
+    public Material[] BlobsMaterials
+    {
+        get { return blobsMaterials; }
     }
 
     #region Methods

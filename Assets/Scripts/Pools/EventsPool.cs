@@ -13,4 +13,8 @@ public static class EventsPool
     public readonly static UnityEvent<SkinItem> UpdateSkinEvent = new UnityEvent<SkinItem>();
 
     public readonly static UnityEvent UpdateUIEvent = new UnityEvent();
+
+    public readonly static UnityEvent<SwipeDirection> UserSwipedEvent = new UnityEvent<SwipeDirection>();
+
+    public readonly static UnityEvent ShouldSpawnBlobEvent = new UnityEvent();
 }

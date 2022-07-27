@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3903623678778322832}
   - component: {fileID: 3903623678778322835}
   - component: {fileID: 3903623678778322845}
+  - component: {fileID: 6965859158887782208}
   m_Layer: 0
   m_Name: SystemManager
   m_TagString: Untagged
@@ -72,6 +73,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allSkins: []
+  blobsMaterials:
+  - {fileID: 2100000, guid: 8dd61fe0dbda5cc419828f22fd1bd9c7, type: 2}
+  - {fileID: 2100000, guid: 5f99696dbd4f828458693252fbaf4610, type: 2}
+  - {fileID: 2100000, guid: 4f006ec3bdc4d0a4787a13bb265c7267, type: 2}
+  - {fileID: 2100000, guid: 2e0dba5d9f4f94b49b4333056b091110, type: 2}
 --- !u!114 &3903623678778322845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,3 +91,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPoolSize: 100
+--- !u!114 &6965859158887782208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3903623678778322838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 028b6980c10150e48b8180191b08f17d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blobsPool: {fileID: 11400000, guid: b753fd50d3ed45f4fa547d7d9bd072e8, type: 2}
+  enemiesPool: {fileID: 0}
+  projectilesPool: {fileID: 11400000, guid: 96f5ec65a5b2f7b4ba9f1e0e9709cfa7, type: 2}
+  enemyParticlesPool: {fileID: 0}
