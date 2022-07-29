@@ -10,6 +10,10 @@ public class InteractionPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     private int _screenWidth;
     private int _screenHeight;
 
+    private float _elapsed = 0;
+    private float _waitTime = 0.45f;
+
+
     private void Awake()
     {
         _screenWidth = Screen.width;
@@ -22,11 +26,18 @@ public class InteractionPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     }
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (_elapsed > 0)
+        {
+            return;
+        }
         _isSwiping = true;
+        _elapsed = _waitTime;
         _firstTouch = Input.mousePosition;
     }
     private void Update()
     {
+        if (_elapsed > 0)
+            _elapsed -= Time.deltaTime;
         if (!_isSwiping)
             return;
         if (Mathf.Abs(Input.mousePosition.x - _firstTouch.x) > _screenWidth / 10.5f)
@@ -44,5 +55,4 @@ public class InteractionPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         EventsPool.ShouldSpawnBlobEvent.Invoke();
     }
-
 }
