@@ -7,6 +7,9 @@ public class Enemy : Target
     [SerializeField]
     private float velocity;
 
+    [SerializeField]
+    private Color hitColor = Color.white;
+
     private Rigidbody _rb;
     private Dictionary<Material, Color> _materials;
     private void Awake()
@@ -44,7 +47,7 @@ public class Enemy : Target
         yield return null;
         foreach (var mat in _materials.Keys)
         {
-            mat.color = Color.red;
+            mat.color = hitColor;
         }
         yield return new WaitForSeconds(0.2f);
         float duration = 0.3f;
@@ -53,7 +56,7 @@ public class Enemy : Target
         {
             foreach (var mat in _materials.Keys)
             {
-                mat.color = Color.Lerp(Color.red, _materials.GetValueOrDefault(mat), elapsed / duration);
+                mat.color = Color.Lerp(hitColor, _materials.GetValueOrDefault(mat), elapsed / duration);
             }
             elapsed += Time.deltaTime;
             yield return null;

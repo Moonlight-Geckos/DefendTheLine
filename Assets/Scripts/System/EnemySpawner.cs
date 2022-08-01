@@ -45,6 +45,7 @@ public class EnemySpawner : MonoBehaviour
         _newPos.x = Random.Range(_bottomLeftCorner.x + 0.5f, _bottomRightCorner.x - 0.5f);
         var enemy = enemiesPools[Random.Range(0, enemiesPools.Length)].Pool.Get();
         enemy.Initialize(_newPos);
+        enemy.transform.LookAt(-Vector3.forward);
 
         _spawnTimer.Run();
     }

@@ -5,7 +5,7 @@ public abstract class Target : MonoBehaviour
     [SerializeField]
     private float maxHealth;
 
-    public float _health;
+    private float _health;
     private int id = -1;
     private IDisposable _disposable;
     private void OnTriggerEnter(Collider other)

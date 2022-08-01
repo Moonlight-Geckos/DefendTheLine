@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ba1195a158e79374ba04083c78a5120a, type: 3}
-  m_Name: NormalEnemiesPool
+  m_Name: BigHeadsPool
   m_EditorClassIdentifier: 
-  prefab: {fileID: 6030928957645453020, guid: c6e488fdac6674242b12af84fc3f9708, type: 3}
+  prefab: {fileID: 2112670411555081566, guid: be45e18bae178a34791fb6f4228d1e1f, type: 3}
   maxPoolSize: 100
