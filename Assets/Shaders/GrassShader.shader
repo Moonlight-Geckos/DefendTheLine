@@ -3,9 +3,7 @@ Shader "Custom/GrassShader"
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
-        _Cutoff("Alpha Cutoff", Range(0, 1)) = 0.5
         _MainTex ("Main Texture", 2D) = "white" {}
-        _Scale("Scale", Range(0,10)) = 1
         _WaveSpeed("Wave Speed", Float) = 1.0
         _WaveAmp("Wave Amp", Float) = 1.0
         _WindSpeed("Wind Speed", Float) = (1, 1, 1)
@@ -29,11 +27,6 @@ Shader "Custom/GrassShader"
 
             sampler2D _MainTex;
 
-            CBUFFER_START(UnityPerMaterial)
-                float4 _MainTex_ST;
-                float _Cutoff;
-            CBUFFER_END
-
 
             struct appdata
             {
@@ -53,7 +46,6 @@ Shader "Custom/GrassShader"
             float3 _WindSpeed;
             float _WaveSpeed;
             float _WaveAmp;
-            float _Scale;
 
             fixed4 _Color;
 
@@ -131,29 +123,17 @@ Shader "Custom/GrassShader"
             v2f vert(appdata input) {
                 v2f output;
 
-                float j = Unity_SimpleNoise_float(float2(input.instanceID, input.instanceID), 8);
-
-                _WaveSpeed += sin(j) / 4;
-                _WaveAmp += cos(j) / 4;
-
-                input.vertex.xyz = Unity_RotateAboutAxis_Radians_float(input.vertex.xyz, float3(0,1,0), j % 360);
-
-                float4 data = float4(_positionsBuffer[input.instanceID], 0);
-
-                input.vertex.y  *= (sin(j) + 1) * _Scale;
-
-                input.vertex.y -= (sin(j)) * 0.5f;
 
                 output.normal = input.normal;
                 output.uv_MainTex = input.uv;
 
-                float windSample = _Time.y * _WindSpeed.xz ;
+                float2 windSample = _Time.y * _WindSpeed.xz ;
+
+                input.vertex.z += sin(_WaveSpeed * windSample.y) * _WaveAmp * pow(input.vertex.y, 2);
+                input.vertex.x += cos(_WaveSpeed * windSample.x) * _WaveAmp * pow(input.vertex.y, 2);
 
 
-                input.vertex.z += sin(_WaveSpeed * windSample * j) * _WaveAmp * pow(input.uv.y, 2);
-                input.vertex.x += cos(_WaveSpeed * windSample * j) * _WaveAmp * pow(input.uv.y, 2);
-
-                output.vertex = UnityObjectToClipPos(input.vertex + data);
+                output.vertex = UnityObjectToClipPos(input.vertex);
 
 
                 return output;
@@ -162,8 +142,6 @@ Shader "Custom/GrassShader"
             fixed4 frag(v2f IN) : SV_Target
             {
                 fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
-
-                clip(c.a - _Cutoff);
                 return c;
             }
             ENDCG
