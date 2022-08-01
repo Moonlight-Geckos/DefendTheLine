@@ -67,7 +67,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _BumpScale: 1
-    - _Cutoff: 0.3
+    - _Cutoff: 0.266
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
@@ -79,7 +79,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Scale: 0.35
+    - _Scale: 0.42
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -88,8 +88,8 @@ Material:
     - _WaveSpeed: 3.44
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.7735849, g: 0.59365416, b: 0.2583481, a: 1}
+    - _Color: {r: 0.3808702, g: 0.5754717, b: 0.2795924, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _WindSpeed: {r: 1, g: 1, b: 1, a: 1}
+    - _WindSpeed: {r: 0, g: 0, b: 0, a: 0}
     - _WorldSize: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
