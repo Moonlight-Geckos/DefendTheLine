@@ -11,10 +11,13 @@ public class PoolsPool : MonoBehaviour
     private EnemiesPool enemiesPool;
 
     [SerializeField]
-    private ProjectilesPool projectilesPool;
+    private ProjectilesPool normalProjectilesPool;
 
     [SerializeField]
-    private ParticlesPool enemyParticlesPool;
+    private ProjectilesPool explosiveProjectilesPool;
+
+    [SerializeField]
+    private ParticlesPool explosionParticlesPool;
 
     private static PoolsPool _instance;
     public static PoolsPool Instance
@@ -29,10 +32,19 @@ public class PoolsPool : MonoBehaviour
     {
         get { return enemiesPool; }
     }
-    public ProjectilesPool ProjectilesPool
+    public ProjectilesPool NormalProjectilesPool
     {
-        get { return projectilesPool; }
+        get { return normalProjectilesPool; }
     }
+    public ProjectilesPool ExplosiveProjectilesPool
+    {
+        get { return explosiveProjectilesPool; }
+    }
+    public ParticlesPool ExplosionParticlesPool
+    {
+        get { return explosionParticlesPool; }
+    }
+    
 
     private void Awake()
     {

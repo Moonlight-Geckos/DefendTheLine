@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int maxPlayerHealth = 6;
 
+    [SerializeField]
+    private int startingPoints;
+
     #endregion
 
     #region Private
@@ -30,6 +33,10 @@ public class GameManager : MonoBehaviour
     public int MaxPlayerHealth
     {
         get { return maxPlayerHealth; }
+    }
+    public int StartingPoints
+    {
+        get { return startingPoints; }
     }
     private void Awake()
     {

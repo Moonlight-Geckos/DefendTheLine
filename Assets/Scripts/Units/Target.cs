@@ -5,7 +5,7 @@ public abstract class Target : MonoBehaviour
     [SerializeField]
     private float maxHealth;
 
-    private float _health;
+    public float _health;
     private int id = -1;
     private IDisposable _disposable;
     private void OnTriggerEnter(Collider other)
@@ -26,6 +26,8 @@ public abstract class Target : MonoBehaviour
         _health -= damage;
         if (_health <= 0)
         {
+
+            EventsPool.EnemyDiedEvent.Invoke(this);
             DeadVisuals();
             Dispose();
         }
@@ -54,8 +56,8 @@ public abstract class Target : MonoBehaviour
         {
             _disposable = GetComponent<IDisposable>();
         }
-        EventsPool.EnemyDiedEvent.Invoke(this);
         _disposable.Dispose();
+        EventsPool.TargetDisposedEvent.Invoke(this);
     }
     protected abstract void DeadVisuals();
     protected abstract void HitVisuals();

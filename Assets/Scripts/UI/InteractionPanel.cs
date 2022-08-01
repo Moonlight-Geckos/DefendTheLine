@@ -11,7 +11,7 @@ public class InteractionPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     private int _screenHeight;
 
     private float _elapsed = 0;
-    private float _waitTime = 0.45f;
+    private float _waitTime = 0.2f;
 
 
     private void Awake()

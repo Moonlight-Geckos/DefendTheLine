@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public abstract class Projectile : MonoBehaviour
 {
-    private Renderer _renderer;
-    private Target _target;
-    private float _velocity;
-    private Vector3 _direction;
-    private IDisposable _disposable;
+    protected Renderer _renderer;
+    protected Target _target;
+    protected float _velocity;
+    protected Vector3 _direction;
+    protected IDisposable _disposable;
 
-    private bool _canDamage;
+    protected bool _canDamage;
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
@@ -26,8 +24,8 @@ public class Projectile : MonoBehaviour
         if(transform.position.z >= _target.transform.position.z)
         {
 
-            if(_canDamage)
-                _target.GetDamage(1);
+            if (_canDamage)
+                MakeDamage();
             Dispose();
         }
     }
@@ -38,8 +36,11 @@ public class Projectile : MonoBehaviour
         _target = null;
         _disposable.Dispose();
     }
-    public void Initialize(Material mat, Target target, float velocity)
+    protected abstract void MakeDamage();
+    public virtual void Initialize(Material mat, Target target, float velocity)
     {
+        if (_renderer == null)
+            _renderer = GetComponent<Renderer>();
         _target = target;
 
         _direction = (_target.transform.position - transform.position).normalized;

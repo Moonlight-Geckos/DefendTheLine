@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340468cd119416a459b85d529cba2e75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxPlayerHealth: 6
+  startingPoints: 4
 --- !u!114 &3903623678778322832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,6 +106,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blobsPool: {fileID: 11400000, guid: b753fd50d3ed45f4fa547d7d9bd072e8, type: 2}
-  enemiesPool: {fileID: 0}
-  projectilesPool: {fileID: 11400000, guid: 96f5ec65a5b2f7b4ba9f1e0e9709cfa7, type: 2}
-  enemyParticlesPool: {fileID: 0}
+  enemiesPool: {fileID: 11400000, guid: eb377e301a8eac844bfc3ef5bc0bdd34, type: 2}
+  normalProjectilesPool: {fileID: 11400000, guid: 96f5ec65a5b2f7b4ba9f1e0e9709cfa7,
+    type: 2}
+  explosiveProjectilesPool: {fileID: 11400000, guid: d2dbf9d14621b39489d367aee64e0ebd,
+    type: 2}
+  explosionParticlesPool: {fileID: 11400000, guid: 03146fcbc94648f488eb7f3d17caf747,
+    type: 2}

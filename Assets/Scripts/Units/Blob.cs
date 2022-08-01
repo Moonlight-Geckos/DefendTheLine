@@ -23,19 +23,21 @@ public class Blob : MonoBehaviour
     private IDisposable _disposable;
 
     private Renderer _renderer;
-    private ProjectilesPool _projectilePool;
+    private ProjectilesPool _normalProjectilesPool;
+    private ProjectilesPool _explosiveProjectilesPool;
 
     private Target _currentTarget;
     private float _shootingCooldown;
-    private Vector3 _currentPos;
+    public Vector3 _currentPos;
     private bool _moving;
+    private BlobAnimator _blobAnimator;
 
     #region AttackTypes
     Dictionary<int, string> _attackTypes;
 
     IEnumerator lvl0()
     {
-        Shoot(_currentTarget);
+        Shoot(_normalProjectilesPool, _currentTarget);
         yield return null;
     }
     IEnumerator lvl1()
@@ -46,10 +48,9 @@ public class Blob : MonoBehaviour
         {
             if (cnt == 2)
                 break;
-            Shoot(closetar);
+            Shoot(_normalProjectilesPool, closetar);
             cnt++;
         }
-        Debug.Log(cnt);
         yield return null;
 
     }
@@ -58,48 +59,32 @@ public class Blob : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             if(_currentTarget != null)
-                Shoot(_currentTarget);
+                Shoot(_normalProjectilesPool, _currentTarget);
             yield return new WaitForSeconds(0.12f);
         }
     }
     IEnumerator lvl3()
     {
-        Shoot(_currentTarget);
+        Shoot(_explosiveProjectilesPool, _currentTarget);
         yield return null;
     }
     IEnumerator lvl4()
     {
-        Shoot(_currentTarget);
+        Shoot(_normalProjectilesPool, _currentTarget);
         _shootingCooldown -= 0.5f;
         yield return null;
     }
 
     #endregion
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.name[0] > name[0] && _level > -1)
-        {
-            other.GetComponent<Blob>().Wobble(0.45f, (other.transform.position - transform.position).normalized);
-            _level = -1;
-            Dispose();
-        }
-    }
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.name[0] > name[0] && _level > -1)
-        {
-            other.GetComponent<Blob>().Wobble(0.45f, (other.transform.position - transform.position).normalized);
-            _level = -1;
-            Dispose();
-        }
-    }
     private void Awake()
     {
-        _renderer = GetComponent<Renderer>();
+        _renderer = GetComponentInChildren<Renderer>();
         _renderer.material.SetFloat("_RandomNum", Random.value);
 
-        _projectilePool = PoolsPool.Instance.ProjectilesPool;
+        _blobAnimator = GetComponentInChildren<BlobAnimator>();
+
+        _normalProjectilesPool = PoolsPool.Instance.NormalProjectilesPool;
+        _explosiveProjectilesPool = PoolsPool.Instance.ExplosiveProjectilesPool;
         _dataHolder = DataHolder.Instance;
         _observer = Observer.Instance;
 
@@ -122,11 +107,32 @@ public class Blob : MonoBehaviour
             Attack();
         }
     }
-    public void Initialize()
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name[0] > name[0] && _level > -1)
+        {
+            other.GetComponent<Blob>().Wobble(0.45f, (other.transform.position - transform.position).normalized);
+            _level = -1;
+            Dispose();
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.name[0] > name[0] && _level > -1)
+        {
+            other.GetComponent<Blob>().Wobble(0.45f, (other.transform.position - transform.position).normalized);
+            _level = -1;
+            Dispose();
+        }
+    }
+    public void Initialize(Vector3 pos)
     {
         _level = 0;
         _currentTarget = null;
         _shootingCooldown = 0;
+        _currentPos = pos * 2f;
+        _currentPos.y = 0.5f;
         SetupColorAndName();
     }
     public void Dispose()
@@ -137,24 +143,21 @@ public class Blob : MonoBehaviour
     }
     public void Move(Vector3 position)
     {
+        Vector3 _originalPos = _currentPos;
         _currentPos = position * 2;
-        IEnumerator move()
-        {
-            _moving = true;
-            _currentPos.y = 0.5f;
+        _currentPos.y = 0.5f;
 
-            float duration =  0.45f - 0.012f * (Vector3.Distance(_currentPos, transform.position) / 2f );
+        IEnumerator move(float cellSpeed)
+        {
             float elapsed = 0f;
-            while (elapsed <= duration)
+            while (elapsed <= 1)
             {
-                elapsed += Time.deltaTime;
-                transform.position = Vector3.Lerp(transform.position, _currentPos, elapsed / duration);
+                elapsed += Time.deltaTime * cellSpeed;
+                transform.position = Vector3.Lerp(_originalPos, _currentPos, Mathf.Clamp01(elapsed));
                 yield return null;
             }
-            _moving = false;
         }
-        StopCoroutine("move");
-        StartCoroutine(move());
+        StartCoroutine(move(6f));
     }
     public void Merge()
     {
@@ -163,46 +166,12 @@ public class Blob : MonoBehaviour
     }
     private void Wobble(float duration, Vector3 direction)
     {
-        IEnumerator wobble()
-        {
-            float elapsed = 0f;
-            float d;
-            direction = direction.normalized * 0.2f;
-            direction.y = 0;
-            Vector3 a = _currentPos + direction;
-            while(_moving)
-                yield return null;
-            while (elapsed <= duration)
-            {
-                elapsed += Time.deltaTime;
-                d = Mathf.Clamp01(elapsed / duration);
-                transform.position = Vector3.LerpUnclamped(_currentPos, a, (1-d) * Mathf.Sin(Mathf.PI * d * 8));
-                yield return null;
-            }
-        }
         Enrage(duration / 3f, 1.55f);
-        StartCoroutine(wobble());
+        _blobAnimator.Wobble(duration, direction);
     }
     private void Enrage(float duration, float scaleUp)
     {
-        IEnumerator enrage()
-        {
-            float elapsed = 0f;
-            while (elapsed <= duration)
-            {
-                elapsed += Time.deltaTime;
-                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * scaleUp, elapsed / duration);
-                yield return null;
-            }
-            elapsed = 0f;
-            while (elapsed <= duration)
-            {
-                elapsed += Time.deltaTime;
-                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, elapsed / duration);
-                yield return null;
-            }
-        }
-        StartCoroutine(enrage());
+        _blobAnimator.Enrage(duration, scaleUp);
     }
     private void SetupColorAndName()
     {
@@ -221,10 +190,10 @@ public class Blob : MonoBehaviour
                 StartCoroutine(atktype);
         }
     }
-    private void Shoot(Target target)
+    private void Shoot(ProjectilesPool pool, Target target)
     {
         Enrage(0.1f, 1.35f);
-        var projectile = _projectilePool.Pool.Get();
+        var projectile = pool.Pool.Get();
         projectile.transform.position = transform.position;
         projectile.Initialize(_renderer.material, target, projectileSpeed);
         _shootingCooldown = (startingShootingCooldown - decreasingShootingCooldownPerLevel * _level) + Random.Range(0.1f, 0.23f);

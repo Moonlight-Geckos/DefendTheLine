@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a8046bb1dd18834cbe1fcb0bf640437, type: 3}
-  m_Name: BlobsPool
+  m_Script: {fileID: 11500000, guid: 84047a0becb0a9946b67c01156e2998e, type: 3}
+  m_Name: ExplosionParticlesPool
   m_EditorClassIdentifier: 
-  prefab: {fileID: 5940099265893664324, guid: 9fdb0ff2ea4e6c64e8715c0555a8c4f1, type: 3}
+  prefab: {fileID: 2748009745978141466, guid: 25e9a27bfc93fcb49a13282a8ea76d7e, type: 3}
   maxPoolSize: 100

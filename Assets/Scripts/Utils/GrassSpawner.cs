@@ -13,6 +13,9 @@ public class GrassSpawner : MonoBehaviour
     }
 
     [SerializeField]
+    private int numberOfGrass;
+
+    [SerializeField]
     private Material grassMaterial;
 
     [SerializeField]
@@ -40,12 +43,14 @@ public class GrassSpawner : MonoBehaviour
         {
             var rightTopCorner = area.rightTopCorner;
             var leftBottomCorner = area.leftBottomCorner;
-            for (float i = leftBottomCorner.x; i <= rightTopCorner.x; i += 0.55f)
+            for (int k = 0; k < numberOfGrass; k++)
             {
-                for (float j = leftBottomCorner.z; j <= rightTopCorner.z; j += 0.55f)
-                {
-                    _positions.Add(new Vector3(i, 0, j) + new Vector3(UnityEngine.Random.Range(0.5f, 0.7f), transform.position.y, UnityEngine.Random.Range(0.45f, 0.56f)));
-                }
+                Vector3 newPos = new Vector3(
+                    UnityEngine.Random.Range(leftBottomCorner.x, rightTopCorner.x),
+                    transform.position.y,
+                    UnityEngine.Random.Range(leftBottomCorner.z, rightTopCorner.z));
+                newPos += new Vector3(UnityEngine.Random.Range(0.5f, 0.7f), 0, UnityEngine.Random.Range(0.5f, 0.7f));
+                _positions.Add(newPos);
             }
         }
 

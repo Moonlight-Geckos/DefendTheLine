@@ -115,7 +115,7 @@ public class GridManager : MonoBehaviour
                 {
                     newPos = new Tuple<int, int>(i, j);
                 }
-                else if(newPos == null)
+                else
                 {
                     if (_grid[i, j].Level == _grid[orgi, orgj].Level)
                     {

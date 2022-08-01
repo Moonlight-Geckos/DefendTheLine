@@ -28,7 +28,7 @@ public class EnemySpawner : MonoBehaviour
         _bottomRightCorner = MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(1, 0, 0)), -2);
         _bottomLeftCorner = MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(0, 0, 0)), -2);
         transform.position = 
-            (MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(1, 1, 0)), -2) + MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(0, 1, 0)), -2))
+            (MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(1, 1, 0)), transform.position.y) + MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(0, 1, 0)), transform.position.y))
             / 2;
         _newPos = transform.position + Vector3.forward * 3f;
     }

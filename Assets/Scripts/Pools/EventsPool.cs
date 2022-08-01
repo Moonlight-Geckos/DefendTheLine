@@ -23,4 +23,7 @@ public static class EventsPool
     public readonly static UnityEvent<Target> EnemySpawnedEvent = new UnityEvent<Target>();
 
     public readonly static UnityEvent<Target> EnemyDiedEvent = new UnityEvent<Target>();
+
+    public readonly static UnityEvent<Target> TargetDisposedEvent = new UnityEvent<Target>();
+    
 }

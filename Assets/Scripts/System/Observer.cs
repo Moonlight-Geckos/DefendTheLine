@@ -10,6 +10,7 @@ public class Observer : MonoBehaviour
     private static KdTree<Target> _targets;
     private static int uniqueId;
     private static int _currentHealth;
+    private static int _availablePoints;
 
     public bool Finished
     {
@@ -33,6 +34,15 @@ public class Observer : MonoBehaviour
     {
         get { return uniqueId++; }
     }
+    public static int AvailablePoints
+    {
+        get { return _availablePoints; }
+        set 
+        { 
+            _availablePoints = value;
+            EventsPool.UpdateUIEvent.Invoke();
+        }
+    }
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -48,7 +58,8 @@ public class Observer : MonoBehaviour
             EventsPool.GameStartedEvent.AddListener(StartGame);
             EventsPool.GameFinishedEvent.AddListener(FinishGame);
             EventsPool.EnemySpawnedEvent.AddListener(AddTarget);
-            EventsPool.EnemyDiedEvent.AddListener(RemoveTarget);
+            EventsPool.EnemyDiedEvent.AddListener(EnemyDied);
+            EventsPool.TargetDisposedEvent.AddListener(RemoveTarget);
             EventsPool.DamagePlayerEvent.AddListener(PlayerDamaged);
         }
     }
@@ -69,6 +80,7 @@ public class Observer : MonoBehaviour
     {
         _started = true;
         uniqueId = 0;
+        _availablePoints = GameManager.Instance.StartingPoints;
         _targets = new KdTree<Target>();
         _currentHealth = GameManager.Instance.MaxPlayerHealth;
         _playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
@@ -80,6 +92,10 @@ public class Observer : MonoBehaviour
     private void AddTarget(Target target)
     {
         _targets.Add(target);
+    }
+    private void EnemyDied(Target target)
+    {
+        _availablePoints++;
     }
     private void RemoveTarget(Target target)
     {

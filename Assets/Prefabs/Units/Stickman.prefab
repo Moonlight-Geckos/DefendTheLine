@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e09da2b6d65b9b743bc9d5af6e33c99f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  maxHealth: 5
   velocity: 2
 --- !u!1 &6030928957996928308
 GameObject:

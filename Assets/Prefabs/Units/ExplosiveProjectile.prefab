@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 261562923696649156}
   - component: {fileID: 858209817645313439}
   m_Layer: 0
-  m_Name: Projectile
+  m_Name: ExplosiveProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,6 +107,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 261562923696649157}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f5563eb99e5a454096cff2914381bac, type: 3}
+  m_Script: {fileID: 11500000, guid: ac9b3c28044adaa4488f1a14a0072c67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  particlesPool: {fileID: 11400000, guid: 03146fcbc94648f488eb7f3d17caf747, type: 2}
