@@ -101,6 +101,7 @@ public class Blob : MonoBehaviour
         _attackTypes.Add(2, "lvl2");
         _attackTypes.Add(3, "lvl3");
     }
+    /*
     private void Update()
     {
         if (_shootingCooldown > 0)
@@ -114,9 +115,7 @@ public class Blob : MonoBehaviour
             Attack();
         }
     }
-    private void FixedUpdate()
-    {
-    }
+    */
     public void Initialize()
     {
         _level = 0;
@@ -145,7 +144,7 @@ public class Blob : MonoBehaviour
             {
                 elapsed += Time.deltaTime;
                 transform.position = Vector3.Lerp(transform.position, newPos, elapsed / duration);
-                yield return new WaitForSeconds(0.1f);
+                yield return null;
             }
         }
         StartCoroutine(move());
@@ -170,7 +169,7 @@ public class Blob : MonoBehaviour
             while (elapsed <= duration)
             {
                 elapsed += Time.deltaTime;
-                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * 1.5f, elapsed / duration);
+                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * 2f, elapsed / duration);
                 yield return null;
             }
             elapsed = 0f;
