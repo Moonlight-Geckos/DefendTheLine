@@ -14,6 +14,10 @@ public abstract class Target : MonoBehaviour
         {
             EventsPool.EnemySpawnedEvent.Invoke(this);
         }
+        else
+        {
+            DamagePlayer();
+        }
     }
     public void GetDamage(float damage)
     {
@@ -36,9 +40,17 @@ public abstract class Target : MonoBehaviour
         if(id < 0)
             id = Observer.UniqueID;
     }
+    public override int GetHashCode()
+    {
+        return id;
+    }
+    public override bool Equals(object other)
+    {
+        return ((Target)other).id == id;
+    }
     protected void Dispose()
     {
-        if(_disposable == null)
+        if (_disposable == null)
         {
             _disposable = GetComponent<IDisposable>();
         }
@@ -47,12 +59,9 @@ public abstract class Target : MonoBehaviour
     }
     protected abstract void DeadVisuals();
     protected abstract void HitVisuals();
-    public override int GetHashCode()
+    protected virtual void DamagePlayer()
     {
-        return id;
-    }
-    public override bool Equals(object other)
-    {
-        return ((Target)other).id == id;
+        EventsPool.DamagePlayerEvent.Invoke(this);
+        Dispose();
     }
 }

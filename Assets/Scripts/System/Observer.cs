@@ -9,6 +9,7 @@ public class Observer : MonoBehaviour
     private static Transform _playerTransform;
     private static KdTree<Target> _targets;
     private static int uniqueId;
+    private static int _currentHealth;
 
     public bool Finished
     {
@@ -43,10 +44,12 @@ public class Observer : MonoBehaviour
             _instance = this;
             _started = false;
             _finished = false;
+
             EventsPool.GameStartedEvent.AddListener(StartGame);
             EventsPool.GameFinishedEvent.AddListener(FinishGame);
             EventsPool.EnemySpawnedEvent.AddListener(AddTarget);
             EventsPool.EnemyDiedEvent.AddListener(RemoveTarget);
+            EventsPool.DamagePlayerEvent.AddListener(PlayerDamaged);
         }
     }
     private void Update()
@@ -65,8 +68,9 @@ public class Observer : MonoBehaviour
     private void StartGame()
     {
         _started = true;
-        _targets = new KdTree<Target>();
         uniqueId = 0;
+        _targets = new KdTree<Target>();
+        _currentHealth = GameManager.Instance.MaxPlayerHealth;
         _playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
     }
     private void FinishGame(bool w)
@@ -85,5 +89,14 @@ public class Observer : MonoBehaviour
         {
             Debug.LogWarning("Didnt remove");
         }
+    }
+    private void PlayerDamaged(Target t)
+    {
+        if (_currentHealth <= 0)
+            return;
+
+        _currentHealth--;
+        if (_currentHealth <= 0)
+            EventsPool.GameFinishedEvent.Invoke(false);
     }
 }

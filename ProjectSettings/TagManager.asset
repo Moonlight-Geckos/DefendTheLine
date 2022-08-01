@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Grid
   - Spawner
+  - Destination
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - UI
   - Tower
   - Target
-  - Spawner
+  - Trigger
   - 
   - 
   - 

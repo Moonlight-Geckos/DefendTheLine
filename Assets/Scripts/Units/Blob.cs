@@ -27,6 +27,8 @@ public class Blob : MonoBehaviour
 
     private Target _currentTarget;
     private float _shootingCooldown;
+    private Vector3 _currentPos;
+    private bool _moving;
 
     #region AttackTypes
     Dictionary<int, string> _attackTypes;
@@ -51,7 +53,7 @@ public class Blob : MonoBehaviour
         yield return null;
 
     }
-    IEnumerator lvl3()
+    IEnumerator lvl2()
     {
         for (int i = 0; i < 3; i++)
         {
@@ -60,15 +62,13 @@ public class Blob : MonoBehaviour
             yield return new WaitForSeconds(0.12f);
         }
     }
-    IEnumerator lvl4()
+    IEnumerator lvl3()
     {
-        Enrage();
         Shoot(_currentTarget);
         yield return null;
     }
-    IEnumerator lvl5()
+    IEnumerator lvl4()
     {
-        Enrage();
         Shoot(_currentTarget);
         _shootingCooldown -= 0.5f;
         yield return null;
@@ -78,13 +78,21 @@ public class Blob : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name[0] > name[0])
+        if (other.name[0] > name[0] && _level > -1)
+        {
+            other.GetComponent<Blob>().Wobble(0.45f, (other.transform.position - transform.position).normalized);
+            _level = -1;
             Dispose();
+        }
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.name[0] > name[0])
+        if (other.name[0] > name[0] && _level > -1)
+        {
+            other.GetComponent<Blob>().Wobble(0.45f, (other.transform.position - transform.position).normalized);
+            _level = -1;
             Dispose();
+        }
     }
     private void Awake()
     {
@@ -101,7 +109,6 @@ public class Blob : MonoBehaviour
         _attackTypes.Add(2, "lvl2");
         _attackTypes.Add(3, "lvl3");
     }
-    /*
     private void Update()
     {
         if (_shootingCooldown > 0)
@@ -115,7 +122,6 @@ public class Blob : MonoBehaviour
             Attack();
         }
     }
-    */
     public void Initialize()
     {
         _level = 0;
@@ -131,45 +137,61 @@ public class Blob : MonoBehaviour
     }
     public void Move(Vector3 position)
     {
-        StopAllCoroutines();
+        _currentPos = position * 2;
         IEnumerator move()
         {
-            yield return null;
-            Vector3 newPos = position * 2;
-            newPos.y = 0.5f;
+            _moving = true;
+            _currentPos.y = 0.5f;
 
-            float duration =  0.45f - 0.012f * (Vector3.Distance(newPos,transform.position) / 2f );
+            float duration =  0.45f - 0.012f * (Vector3.Distance(_currentPos, transform.position) / 2f );
             float elapsed = 0f;
             while (elapsed <= duration)
             {
                 elapsed += Time.deltaTime;
-                transform.position = Vector3.Lerp(transform.position, newPos, elapsed / duration);
+                transform.position = Vector3.Lerp(transform.position, _currentPos, elapsed / duration);
                 yield return null;
             }
+            _moving = false;
         }
+        StopCoroutine("move");
         StartCoroutine(move());
     }
     public void Merge()
     {
         _level++;
         SetupColorAndName();
-        IEnumerator animate()
-        {
-            yield return new WaitForSeconds(0.22f);
-            Enrage();
-        }
-        StartCoroutine(animate());
     }
-    private void Enrage()
+    private void Wobble(float duration, Vector3 direction)
+    {
+        IEnumerator wobble()
+        {
+            float elapsed = 0f;
+            float d;
+            direction = direction.normalized * 0.2f;
+            direction.y = 0;
+            Vector3 a = _currentPos + direction;
+            while(_moving)
+                yield return null;
+            while (elapsed <= duration)
+            {
+                elapsed += Time.deltaTime;
+                d = Mathf.Clamp01(elapsed / duration);
+                transform.position = Vector3.LerpUnclamped(_currentPos, a, (1-d) * Mathf.Sin(Mathf.PI * d * 8));
+                yield return null;
+            }
+        }
+        Enrage(duration / 3f, 1.55f);
+        StartCoroutine(wobble());
+    }
+    private void Enrage(float duration, float scaleUp)
     {
         IEnumerator enrage()
         {
-            float duration = 0.1f;
             float elapsed = 0f;
             while (elapsed <= duration)
             {
                 elapsed += Time.deltaTime;
-                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * 2f, elapsed / duration);
+                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * scaleUp, elapsed / duration);
                 yield return null;
             }
             elapsed = 0f;
@@ -201,7 +223,7 @@ public class Blob : MonoBehaviour
     }
     private void Shoot(Target target)
     {
-        Enrage();
+        Enrage(0.1f, 1.35f);
         var projectile = _projectilePool.Pool.Get();
         projectile.transform.position = transform.position;
         projectile.Initialize(_renderer.material, target, projectileSpeed);

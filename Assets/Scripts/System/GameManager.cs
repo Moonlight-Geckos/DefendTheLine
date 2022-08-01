@@ -4,6 +4,9 @@ public class GameManager : MonoBehaviour
 {
     #region Serialized
 
+    [SerializeField]
+    private int maxPlayerHealth = 6;
+
     #endregion
 
     #region Private
@@ -23,6 +26,10 @@ public class GameManager : MonoBehaviour
     public float TimeSinceStarted
     {
         get { return _timeSinceStarted; }
+    }
+    public int MaxPlayerHealth
+    {
+        get { return maxPlayerHealth; }
     }
     private void Awake()
     {
