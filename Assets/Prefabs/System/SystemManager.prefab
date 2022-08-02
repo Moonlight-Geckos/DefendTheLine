@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3903623678778322835}
   - component: {fileID: 3903623678778322845}
   - component: {fileID: 6965859158887782208}
+  - component: {fileID: 6799526071619568616}
   m_Layer: 0
   m_Name: SystemManager
   m_TagString: Untagged
@@ -113,3 +114,16 @@ MonoBehaviour:
     type: 2}
   explosionParticlesPool: {fileID: 11400000, guid: 03146fcbc94648f488eb7f3d17caf747,
     type: 2}
+--- !u!114 &6799526071619568616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3903623678778322838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 959898a3a91233443ba256177628b393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  randomizerSeed: 5713.5854

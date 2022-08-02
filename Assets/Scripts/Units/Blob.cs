@@ -27,10 +27,12 @@ public class Blob : MonoBehaviour
     private ProjectilesPool _explosiveProjectilesPool;
 
     private Target _currentTarget;
-    private float _shootingCooldown;
     public Vector3 _currentPos;
-    private bool _moving;
     private BlobAnimator _blobAnimator;
+
+    private float _shootingCooldown;
+    private string _atktype;
+    private bool _moving;
 
     #region AttackTypes
     Dictionary<int, string> _attackTypes;
@@ -129,6 +131,7 @@ public class Blob : MonoBehaviour
     public void Initialize(Vector3 pos)
     {
         _level = 0;
+        _moving = false;
         _currentTarget = null;
         _shootingCooldown = 0;
         _currentPos = pos * 2f;
@@ -150,12 +153,14 @@ public class Blob : MonoBehaviour
         IEnumerator move(float cellSpeed)
         {
             float elapsed = 0f;
+            _moving = true;
             while (elapsed <= 1)
             {
                 elapsed += Time.deltaTime * cellSpeed;
                 transform.position = Vector3.Lerp(_originalPos, _currentPos, Mathf.Clamp01(elapsed));
                 yield return null;
             }
+            _moving = false;
         }
         StartCoroutine(move(6f));
     }
@@ -176,18 +181,24 @@ public class Blob : MonoBehaviour
     private void SetupColorAndName()
     {
         int ind = Mathf.Min(_level, _dataHolder.BlobsMaterials.Length - 1);
-        _renderer.material = _dataHolder.BlobsMaterials[ind];
+        var t = ColorGenerator.Instance.GenerateBlobPalette(_level);
+        _renderer.material.SetColor("_Color", t.Item2);
+        _renderer.material.SetColor("_FresnelColor", t.Item1);
         name = _level.ToString();
     }
 
     private void Attack()
     {
-        string atktype;
-
-        if (_attackTypes.TryGetValue(_level, out atktype))
+        _attackTypes.TryGetValue(_level % 5, out _atktype);
+        if (_atktype != null)
         {
-            if(gameObject.activeSelf)
-                StartCoroutine(atktype);
+            if(gameObject.activeSelf && !_moving)
+                StartCoroutine(_atktype);
+        }
+        else
+        {
+            if (gameObject.activeSelf && !_moving)
+                StartCoroutine("lvl1");
         }
     }
     private void Shoot(ProjectilesPool pool, Target target)
