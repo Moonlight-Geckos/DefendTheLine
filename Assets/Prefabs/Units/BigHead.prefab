@@ -443,7 +443,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112670411555081566}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0047755, y: 0.54954803, z: 5.126682}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -464,8 +464,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e09da2b6d65b9b743bc9d5af6e33c99f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 5
+  maxHealth: 4
   velocity: 2
+  hitColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!54 &4775242941476441785
 Rigidbody:
   m_ObjectHideFlags: 0

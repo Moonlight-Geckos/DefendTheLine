@@ -10,6 +10,6 @@ public class ExplodingProjectile : Projectile
     protected override void MakeDamage()
     {
         var ps = _explosionParticlesPool.Pool.Get();
-        ps.Initialize(transform.position + Vector3.up);
+        ps.Initialize(transform.position + Vector3.up, _damage);
     }
 }

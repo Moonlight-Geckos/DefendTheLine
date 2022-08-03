@@ -23,9 +23,10 @@ public class Enemy : Target
             _materials.Add(material, material.color);
         }
     }
-    public void Initialize(Vector3 pos)
+    public void Initialize(Vector3 pos, float additionalHealth)
     {
         base.Initialize();
+        _health += additionalHealth;
         transform.position = pos;
         _rb.velocity = new Vector3(0, 0, -velocity);
         foreach (var mat in _materials.Keys)

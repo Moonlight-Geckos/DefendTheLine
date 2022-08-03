@@ -206,7 +206,7 @@ public class Blob : MonoBehaviour
         Enrage(0.1f, 1.35f);
         var projectile = pool.Pool.Get();
         projectile.transform.position = transform.position;
-        projectile.Initialize(_renderer.material, target, projectileSpeed);
+        projectile.Initialize(_renderer.material, target, projectileSpeed, _level);
         _shootingCooldown = (startingShootingCooldown - decreasingShootingCooldownPerLevel * _level) + Random.Range(0.1f, 0.23f);
     }
 

@@ -5,6 +5,7 @@ public abstract class Projectile : MonoBehaviour
     protected Renderer _renderer;
     protected Target _target;
     protected float _velocity;
+    protected float _damage;
     protected Vector3 _direction;
     protected IDisposable _disposable;
 
@@ -37,7 +38,7 @@ public abstract class Projectile : MonoBehaviour
         _disposable.Dispose();
     }
     protected abstract void MakeDamage();
-    public virtual void Initialize(Material mat, Target target, float velocity)
+    public virtual void Initialize(Material mat, Target target, float velocity, float damage)
     {
         if (_renderer == null)
             _renderer = GetComponent<Renderer>();
@@ -48,5 +49,7 @@ public abstract class Projectile : MonoBehaviour
         _renderer.material = mat;
         _velocity = velocity;
         _canDamage = true;
+
+        _damage = damage;
     }
 }

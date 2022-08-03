@@ -8,7 +8,7 @@ public class ColorGenerator : MonoBehaviour
 
     [SerializeField]
     [Range(0f, 1f)]
-    private int hueShifting = 0;
+    private float hueShifting = 0;
 
     private static ColorGenerator _instance;
 
@@ -44,6 +44,6 @@ public class ColorGenerator : MonoBehaviour
     }
     public float Sigmoid01(double value)
     {
-        return 1.0f / (1.0f + (float)Math.Exp(-value + 2));
+        return 1.0f / (1.0f + (float)Math.Exp(-(value * 4f) + 2));
     }
 }

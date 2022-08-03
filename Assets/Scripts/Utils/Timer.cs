@@ -25,6 +25,10 @@ public class Timer
 				totalSeconds = value;
 			}
 		}
+        get
+        {
+			return totalSeconds;
+        }
 	}
 
 	public bool Running

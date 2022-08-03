@@ -5,7 +5,12 @@ public class ParticleSystemController : MonoBehaviour
 {
     protected ParticleSystem.MainModule _ps;
     protected IDisposable _disposable;
-    public void Initialize(Vector3 position) => transform.position = position;
+    protected float _damage;
+    public void Initialize(Vector3 position, float damage)
+    {
+        transform.position = position;
+        _damage = damage;
+    }
     private void Awake()
     {
         var system = GetComponent<ParticleSystem>().main;
@@ -15,7 +20,7 @@ public class ParticleSystemController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        other.GetComponent<Target>()?.GetDamage(1);
+        other.GetComponent<Target>()?.GetDamage(_damage);
     }
     void OnParticleSystemStopped()
     {

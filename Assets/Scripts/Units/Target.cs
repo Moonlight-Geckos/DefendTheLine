@@ -5,9 +5,9 @@ public abstract class Target : MonoBehaviour
     [SerializeField]
     private float maxHealth;
 
-    private float _health;
-    private int id = -1;
-    private IDisposable _disposable;
+    protected float _health;
+    protected int id = -1;
+    protected IDisposable _disposable;
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag[0] == 'S')

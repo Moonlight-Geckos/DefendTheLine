@@ -1968,11 +1968,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3903623678778322834, guid: 10495360b2df84849b44cf94207784dc,
-        type: 3}
-      propertyPath: startingPoints
-      value: 999999999
-      objectReference: {fileID: 0}
     - target: {fileID: 3903623678778322838, guid: 10495360b2df84849b44cf94207784dc,
         type: 3}
       propertyPath: m_Name
@@ -1980,8 +1975,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6799526071619568616, guid: 10495360b2df84849b44cf94207784dc,
         type: 3}
-      propertyPath: randomizerSeed
-      value: 113
+      propertyPath: hueShifting
+      value: 0.668
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10495360b2df84849b44cf94207784dc, type: 3}

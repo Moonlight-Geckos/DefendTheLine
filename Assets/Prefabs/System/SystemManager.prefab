@@ -126,4 +126,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 959898a3a91233443ba256177628b393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  randomizerSeed: 5713.5854
+  randomizerSeed: 113
+  hueShifting: 0
