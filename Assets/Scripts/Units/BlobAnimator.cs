@@ -24,17 +24,19 @@ public class BlobAnimator : MonoBehaviour
     IEnumerator enrageCoroutine(float duration, float scaleUp)
     {
         float elapsed = 0f;
+        Vector3 puffScale = Vector3.one * 1.4f * scaleUp;
+        Vector3 originalScale = Vector3.one * 1.4f;
         while (elapsed <= duration)
         {
             elapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * scaleUp, elapsed / duration);
+            transform.localScale = Vector3.Lerp(transform.localScale, puffScale, elapsed / duration);
             yield return null;
         }
         elapsed = 0f;
         while (elapsed <= duration)
         {
             elapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, elapsed / duration);
+            transform.localScale = Vector3.Lerp(transform.localScale, originalScale, elapsed / duration);
             yield return null;
         }
     }

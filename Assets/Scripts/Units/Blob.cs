@@ -22,17 +22,24 @@ public class Blob : MonoBehaviour
     private Observer _observer;
     private IDisposable _disposable;
 
-    private Renderer _renderer;
+    private Target _currentTarget;
     private ProjectilesPool _normalProjectilesPool;
     private ProjectilesPool _explosiveProjectilesPool;
 
-    private Target _currentTarget;
+    private Renderer _renderer;
     public Vector3 _currentPos;
+
+    private Color _mainColor;
     private BlobAnimator _blobAnimator;
 
     private float _shootingCooldown;
     private string _atktype;
     private bool _moving;
+
+    public Color MainColor
+    {
+        get { return _mainColor; }
+    }
 
     #region AttackTypes
     Dictionary<int, string> _attackTypes;
@@ -180,8 +187,8 @@ public class Blob : MonoBehaviour
     }
     private void SetupColorAndName()
     {
-        int ind = Mathf.Min(_level, _dataHolder.BlobsMaterials.Length - 1);
         var t = ColorGenerator.Instance.GenerateBlobPalette(_level);
+        _mainColor = t.Item2;
         _renderer.material.SetColor("_Color", t.Item2);
         _renderer.material.SetColor("_FresnelColor", t.Item1);
         name = _level.ToString();
@@ -206,8 +213,7 @@ public class Blob : MonoBehaviour
         Enrage(0.1f, 1.35f);
         var projectile = pool.Pool.Get();
         projectile.transform.position = transform.position;
-        projectile.Initialize(_renderer.material, target, projectileSpeed, _level);
+        projectile.Initialize(_renderer.material, target, projectileSpeed, _level + 1);
         _shootingCooldown = (startingShootingCooldown - decreasingShootingCooldownPerLevel * _level) + Random.Range(0.1f, 0.23f);
     }
-
 }

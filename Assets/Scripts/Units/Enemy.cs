@@ -12,27 +12,26 @@ public class Enemy : Target
 
     private Rigidbody _rb;
     private Dictionary<Material, Color> _materials;
+    private Renderer _renderer;
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        var renderer = GetComponentInChildren<Renderer>();
-
-        _materials = new Dictionary<Material, Color>();
-        foreach (var material in renderer.materials)
-        {
-            _materials.Add(material, material.color);
-        }
+        _renderer = GetComponentInChildren<Renderer>();
     }
     public void Initialize(Vector3 pos, float additionalHealth)
     {
         base.Initialize();
         _health += additionalHealth;
         transform.position = pos;
-        _rb.velocity = new Vector3(0, 0, -velocity);
-        foreach (var mat in _materials.Keys)
+
+        _materials = new Dictionary<Material, Color>();
+        var palette = ColorGenerator.Instance.ActivePalette;
+        foreach (var material in _renderer.materials)
         {
-            mat.color = _materials.GetValueOrDefault(mat);
+            material.color = palette.colors[1];
+            _materials.Add(material, material.color);
         }
+        _rb.velocity = new Vector3(0, 0, -velocity);
     }
     protected override void HitVisuals()
     {
