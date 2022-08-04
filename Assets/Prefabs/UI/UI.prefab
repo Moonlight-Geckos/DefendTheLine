@@ -966,6 +966,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: StartGame
       objectReference: {fileID: 0}
+    - target: {fileID: 3143874076378695733, guid: 14f64bad14a13cb439a57bd7b8b80538,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 8596028100156724543, guid: 14f64bad14a13cb439a57bd7b8b80538,
         type: 3}
       propertyPath: m_AnchorMax.y

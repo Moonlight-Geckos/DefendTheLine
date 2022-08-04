@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 3
-  velocity: 2
+  velocity: 1.5
   hitColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!54 &4775242941476441785
 Rigidbody:
@@ -901,6 +901,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3817674011906935023}
   - component: {fileID: 648303467255992879}
+  - component: {fileID: 6684585052407514791}
   m_Layer: 7
   m_Name: polySurface77
   m_TagString: Untagged
@@ -931,8 +932,8 @@ SkinnedMeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3839489249966291166}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -1010,6 +1011,21 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.011087298, y: 1.2154518, z: 0.098820806}
     m_Extent: {x: 3.3677874, y: 4.440016, z: 1.746271}
   m_DirtyAABB: 0
+--- !u!114 &6684585052407514791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3839489249966291166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db912859debc77c4db8fb5518eb860b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignments:
+  - name: _Color
+    indexInPalette: 2
 --- !u!1 &4072689716869391146
 GameObject:
   m_ObjectHideFlags: 0

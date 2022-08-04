@@ -24,13 +24,6 @@ public class Enemy : Target
         _health += additionalHealth;
         transform.position = pos;
 
-        _materials = new Dictionary<Material, Color>();
-        var palette = ColorGenerator.Instance.ActivePalette;
-        foreach (var material in _renderer.materials)
-        {
-            material.color = palette.colors[1];
-            _materials.Add(material, material.color);
-        }
         _rb.velocity = new Vector3(0, 0, -velocity);
     }
     protected override void HitVisuals()
@@ -44,7 +37,14 @@ public class Enemy : Target
     }
     private IEnumerator hit()
     {
-        yield return null;
+        if(_materials == null)
+        {
+            _materials = new Dictionary<Material, Color>();
+            foreach (var material in _renderer.materials)
+            {
+                _materials.Add(material, material.color);
+            }
+        }
         foreach (var mat in _materials.Keys)
         {
             mat.color = hitColor;

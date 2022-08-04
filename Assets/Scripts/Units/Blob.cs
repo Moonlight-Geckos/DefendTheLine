@@ -111,7 +111,7 @@ public class Blob : MonoBehaviour
         {
             _currentTarget = _observer.GetClosestTarget(transform.position);
         }
-        else if(_shootingCooldown <= 0)
+        else if(_shootingCooldown <= 0 && !_moving)
         {
             Attack();
         }
