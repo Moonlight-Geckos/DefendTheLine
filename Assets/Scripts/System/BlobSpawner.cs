@@ -4,11 +4,16 @@ public class BlobSpawner : MonoBehaviour
 {
     private GridManager _gridManager;
     private BlobsPool _blobPool;
-    private int _spawnCost;
+    private static int _spawnCost;
+
+    public static int SpawnCost
+    {
+        get { return _spawnCost; }
+    }
     private void Awake()
     {
         EventsPool.ShouldSpawnBlobEvent.AddListener(SpawnBlob);
-        _spawnCost = 1;
+        _spawnCost = 0;
     }
     private void Start()
     {
@@ -27,7 +32,7 @@ public class BlobSpawner : MonoBehaviour
             blob.Initialize(new Vector3(pos.Item2, 0, pos.Item1));
             _gridManager.AddBlob(blob, pos);
             Observer.AvailablePoints -= _spawnCost;
-            _spawnCost += 2;
+            _spawnCost ++;
         }
     }
 }

@@ -31,7 +31,7 @@ public class BlobLevel : MonoBehaviour
     }
     private void InitializeText()
     {
-        _tmpro.text = _currentLevel.ToString();
+        _tmpro.text = (_currentLevel + 1).ToString();
         _textColor = _blob.MainColor.grayscale < 0.5f ? Color.white : Color.black;
         _tmpro.color = _textColor;
     }

@@ -26,17 +26,31 @@ public class BlobAnimator : MonoBehaviour
         float elapsed = 0f;
         Vector3 puffScale = Vector3.one * 1.4f * scaleUp;
         Vector3 originalScale = Vector3.one * 1.4f;
+        transform.localScale = originalScale;
         while (elapsed <= duration)
         {
             elapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(transform.localScale, puffScale, elapsed / duration);
+            transform.localScale = Vector3.Lerp(transform.localScale, puffScale, Mathf.Clamp01(elapsed / duration));
             yield return null;
         }
         elapsed = 0f;
         while (elapsed <= duration)
         {
             elapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(transform.localScale, originalScale, elapsed / duration);
+            transform.localScale = Vector3.Lerp(transform.localScale, originalScale, Mathf.Clamp01(elapsed / duration));
+            yield return null;
+        }
+    }
+    IEnumerator puffupCoroutine(float duration)
+    {
+        float elapsed = 0f;
+        Vector3 originalScale = Vector3.one * 1.4f;
+
+        transform.localScale = Vector3.zero;
+        while (elapsed <= duration)
+        {
+            elapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(transform.localScale, originalScale, Mathf.Clamp01(elapsed / duration));
             yield return null;
         }
     }
@@ -47,6 +61,10 @@ public class BlobAnimator : MonoBehaviour
     public void Enrage(float duration, float scaleUp)
     {
         StartCoroutine(enrageCoroutine(duration, scaleUp));
+    }
+    public void Puffup(float duration)
+    {
+        StartCoroutine(puffupCoroutine(duration));
     }
 
 }

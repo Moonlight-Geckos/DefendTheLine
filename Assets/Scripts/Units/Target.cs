@@ -14,7 +14,7 @@ public abstract class Target : MonoBehaviour
         {
             EventsPool.EnemySpawnedEvent.Invoke(this);
         }
-        else
+        else if(other.tag[0] == 'D')
         {
             DamagePlayer();
         }
@@ -26,7 +26,6 @@ public abstract class Target : MonoBehaviour
         _health -= damage;
         if (_health <= 0)
         {
-
             EventsPool.EnemyDiedEvent.Invoke(this);
             DeadVisuals();
             Dispose();

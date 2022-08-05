@@ -19,6 +19,12 @@ public class PoolsPool : MonoBehaviour
     [SerializeField]
     private ParticlesPool explosionParticlesPool;
 
+    [SerializeField]
+    private ParticlesPool dropletsPool;
+
+    [SerializeField]
+    private ParticlesPool stickmenExplosionPool;
+
     private static PoolsPool _instance;
     public static PoolsPool Instance
     {
@@ -44,7 +50,14 @@ public class PoolsPool : MonoBehaviour
     {
         get { return explosionParticlesPool; }
     }
-    
+    public ParticlesPool DropletsPool
+    {
+        get { return dropletsPool; }
+    }
+    public ParticlesPool StickmenExplosionPool
+    {
+        get { return stickmenExplosionPool; }
+    }
 
     private void Awake()
     {

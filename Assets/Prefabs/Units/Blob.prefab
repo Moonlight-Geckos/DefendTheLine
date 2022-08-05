@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4533175119736146216}
   - component: {fileID: 4533175119736146217}
   - component: {fileID: 7961996125659579432}
-  - component: {fileID: 8113790449819184811}
   m_Layer: 6
   m_Name: InnerBlob
   m_TagString: Untagged
@@ -97,26 +96,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf54b1b2aabc3e84b9762123e7a0004c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!95 &8113790449819184811
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4533175119736146219}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e436e8e6b981b41428ac09b15eff65e8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5692682595400778029
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,7 +352,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7474042662059806178
 Canvas:

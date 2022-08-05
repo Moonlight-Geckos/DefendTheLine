@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraScaler : MonoBehaviour
 {
-    private void Start()
+    private void Awake()
     {
         var camera = GetComponent<Camera>();
         var camera2 = transform.GetChild(0).GetComponent<Camera>();

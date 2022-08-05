@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Enemy : Target
@@ -11,12 +12,14 @@ public class Enemy : Target
     private Color hitColor = Color.white;
 
     private Rigidbody _rb;
+    private ParticlesPool _particlesPool;
     private Dictionary<Material, Color> _materials;
     private Renderer _renderer;
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         _renderer = GetComponentInChildren<Renderer>();
+        _particlesPool = PoolsPool.Instance.StickmenExplosionPool;
     }
     public void Initialize(Vector3 pos, float additionalHealth)
     {
@@ -33,7 +36,16 @@ public class Enemy : Target
     }
     protected override void DeadVisuals()
     {
-        // To be implemented
+        var ps = _particlesPool.Pool.Get(); 
+        if (_materials == null)
+        {
+            _materials = new Dictionary<Material, Color>();
+            foreach (var material in _renderer.materials)
+            {
+                _materials.Add(material, material.color);
+            }
+        }
+        ps.Initialize(transform.position, 0, _materials.First().Value);
     }
     private IEnumerator hit()
     {

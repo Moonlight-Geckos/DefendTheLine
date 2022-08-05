@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPlayerHealth: 6
-  startingPoints: 4
+  startingPoints: 2
 --- !u!114 &3903623678778322832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +114,9 @@ MonoBehaviour:
     type: 2}
   explosionParticlesPool: {fileID: 11400000, guid: 03146fcbc94648f488eb7f3d17caf747,
     type: 2}
+  dropletsPool: {fileID: 11400000, guid: f38a9aec9d2b1d548b100c2000ca1f9a, type: 2}
+  stickmenExplosionPool: {fileID: 11400000, guid: d67d96d777545d84d9da6d06d18a97df,
+    type: 2}
 --- !u!114 &6799526071619568616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +129,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 959898a3a91233443ba256177628b393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  randomizerSeed: 55143
+  randomizerSeed: 67163
   hueShifting: 0
-  palettes: []
+  palettes:
+  - colors:
+    - {r: 0.39215687, g: 0.17254902, b: 0.6627451, a: 1}
+    - {r: 1, g: 0.6292711, b: 0.107547104, a: 1}
+    - {r: 1, g: 0.45490196, b: 0.83137256, a: 1}
+    - {r: 1, g: 0.72156864, b: 0.87058824, a: 1}
+    - {r: 1, g: 0.8666667, b: 0.88235295, a: 1}
+  - colors:
+    - {r: 0.003921569, g: 0.09019608, b: 0.18431373, a: 1}
+    - {r: 0.7924528, g: 0.025418244, b: 0.18596044, a: 1}
+    - {r: 0.26666668, g: 0.42745098, b: 0.9647059, a: 1}
+    - {r: 0, g: 0.3882353, b: 0.3647059, a: 1}
+    - {r: 0.03137255, g: 0.6431373, b: 0.7411765, a: 1}
+  - colors:
+    - {r: 0.8666667, g: 0.43137255, b: 0.25882354, a: 1}
+    - {r: 0.40392157, g: 0.5803922, b: 0.21176471, a: 1}
+    - {r: 0.25882354, g: 0.47843137, b: 0.6313726, a: 1}
+    - {r: 0.64705884, g: 0.74509805, b: 0, a: 1}
+    - {r: 0.92156863, g: 0.9490196, b: 0.98039216, a: 1}
+  - colors:
+    - {r: 0.7075472, g: 0, b: 0.62744766, a: 1}
+    - {r: 0.84705883, g: 0.11764706, b: 0.35686275, a: 1}
+    - {r: 0.9411765, g: 0.32941177, b: 0.30980393, a: 1}
+    - {r: 0.99215686, g: 0.9411765, b: 0.8352941, a: 1}
+    - {r: 0.7764706, g: 0.84705883, b: 0.827451, a: 1}

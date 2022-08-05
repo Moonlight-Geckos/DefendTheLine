@@ -143,6 +143,7 @@ public class Blob : MonoBehaviour
         _shootingCooldown = 0;
         _currentPos = pos * 2f;
         _currentPos.y = 0.5f;
+        _blobAnimator.Puffup(0.5f);
         SetupColorAndName();
     }
     public void Dispose()
@@ -199,13 +200,17 @@ public class Blob : MonoBehaviour
         _attackTypes.TryGetValue(_level % 5, out _atktype);
         if (_atktype != null)
         {
-            if(gameObject.activeSelf && !_moving)
+            if (gameObject.activeSelf && !_moving)
+            {
                 StartCoroutine(_atktype);
+            }
         }
         else
         {
             if (gameObject.activeSelf && !_moving)
-                StartCoroutine("lvl1");
+            {
+                StartCoroutine("lvl0");
+            }
         }
     }
     private void Shoot(ProjectilesPool pool, Target target)
