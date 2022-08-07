@@ -42,6 +42,7 @@ Shader "Custom/SlimeShader"
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
                 float2 uv : TEXCOORD0;
+                float3 tan : TANGENT;
             };
 
             struct v2f
@@ -116,10 +117,39 @@ Shader "Custom/SlimeShader"
                 float2 Out = pow((1.0 - saturate(dot(normalize(Normal), normalize(ViewDir)))), Power);
                 return Out;
             }
-
             v2f vert(appdata v)
             {
                 v2f o;
+
+                float3 v0 = v.vertex.xyz;
+                float3 v1 = v0 + (v.tan.xyz * _WaveSize);
+
+                float3 bitangent = cross(v.normal, v.tan.xyz);
+                float3 v2 = v0 + (bitangent * _WaveSize);
+
+                float noise0 = Unity_SimpleNoise_float(v0 + (_Time.y * _NoiseSpeed) + _RandomNum, _NoiseScale);
+                float noise1 = Unity_SimpleNoise_float(v1 + (_Time.y * _NoiseSpeed) + _RandomNum, _NoiseScale);
+                float noise2 = Unity_SimpleNoise_float(v2 + (_Time.y * _NoiseSpeed) + _RandomNum, _NoiseScale);
+
+                v0.xyz += ((noise0 + 1) / 2) * v.normal;
+
+                v1.xyz += ((noise1 + 1) / 2) * v.normal;
+
+                v2.xyz += ((noise2 + 1) / 2) * v.normal;
+
+                float3 vn = cross(v2 - v0, v1 - v0);
+
+                v.normal = normalize(-vn);
+                v.vertex.xyz = v0 * .5;
+                v.normal.xyz = v0 * .5;
+
+                o.vertex = UnityObjectToClipPos(v.vertex);
+
+                o.viewDir = normalize(ObjSpaceViewDir(v.vertex));
+                o.normal = normalize(mul(unity_ObjectToWorld, v.normal));
+                o.uv_MainTex = v.uv;
+
+                /*
                 float2 pp = (mul(unity_ObjectToWorld, v.normal)).xz + (_Time * (_NoiseSpeed + _RandomNum));
                 float noise = Unity_SimpleNoise_float(pp, _NoiseScale);
                 float remNoise = Unity_Remap_float2(noise, float2(0, 1), float2(-1, 1)) * _WaveSize;
@@ -131,6 +161,7 @@ Shader "Custom/SlimeShader"
                 o.uv_MainTex = v.uv;
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
+                */
                 return o;
             }
 

@@ -117,7 +117,7 @@ public class HeadUI : MonoBehaviour
             end.Win();
         else
             end.Lose();
-        FadeToPanel(endGamePanel, 1.5f);
+        FadeToPanel(endGamePanel, 0);
     }
     /*
     private void Update()

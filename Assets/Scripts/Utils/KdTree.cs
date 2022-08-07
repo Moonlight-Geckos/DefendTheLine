@@ -185,6 +185,8 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
         //readd
         while (current != null)
         {
+            if (current.component == null)
+                continue;
             if(current.component.gameObject.activeSelf)
                 _add(current);
             current = current._oldRef;

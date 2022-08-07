@@ -1276,7 +1276,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1812262045084883444}
   - component: {fileID: 4844701681356149908}
-  - component: {fileID: 7905869243736699923}
+  - component: {fileID: 4706305041529690107}
   m_Layer: 7
   m_Name: polySurface76
   m_TagString: Untagged
@@ -1386,7 +1386,7 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.012186766, y: 0.5242667, z: 0.17712918}
     m_Extent: {x: 3.3848474, y: 3.6955185, z: 1.1669333}
   m_DirtyAABB: 0
---- !u!114 &7905869243736699923
+--- !u!114 &4706305041529690107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

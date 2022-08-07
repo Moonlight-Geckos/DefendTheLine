@@ -837,7 +837,8 @@ GameObject:
   m_Component:
   - component: {fileID: 878884829408350528}
   - component: {fileID: 1495800904229473680}
-  - component: {fileID: 5178875012873424426}
+  - component: {fileID: 377955643451483560}
+  - component: {fileID: 5443822530696633652}
   m_Layer: 7
   m_Name: polySurface78
   m_TagString: Untagged
@@ -947,7 +948,25 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.023818493, y: 0.41134906, z: 0.21881539}
     m_Extent: {x: 4.992621, y: 3.689316, z: 1.2375016}
   m_DirtyAABB: 0
---- !u!114 &5178875012873424426
+--- !u!114 &377955643451483560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5550571535602001781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52752b574ff2dfb4281964fe40546ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignments:
+  - name: _Color
+    indexInPalette: 2
+  bossAssignments:
+  - name: _Color
+    indexInPalette: 3
+--- !u!114 &5443822530696633652
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

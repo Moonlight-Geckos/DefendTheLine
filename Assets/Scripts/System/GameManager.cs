@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int startingPoints;
 
+    [SerializeField]
+    private int enemiesToSpawn;
+
     #endregion
 
     #region Private
@@ -37,6 +40,10 @@ public class GameManager : MonoBehaviour
     public int StartingPoints
     {
         get { return startingPoints; }
+    }
+    public int EnemiesToSpawn
+    {
+        get { return enemiesToSpawn; }
     }
     private void Awake()
     {

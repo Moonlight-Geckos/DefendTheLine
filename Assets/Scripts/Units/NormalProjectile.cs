@@ -12,7 +12,7 @@ public class NormalProjectile : Projectile
     protected override void MakeDamage()
     {
         var ps = _dropletsPool.Pool.Get();
-        ps.Initialize(transform.position, 0, _renderer.material.color);
+        ps.Initialize(transform.position, 0, _renderer.material.color * 0.5f);
         _target.GetDamage(_damage);
     }
 }

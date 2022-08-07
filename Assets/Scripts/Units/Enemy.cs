@@ -15,18 +15,26 @@ public class Enemy : Target
     private ParticlesPool _particlesPool;
     private Dictionary<Material, Color> _materials;
     private Renderer _renderer;
+    private Transform _riggedTransform;
+    private float _originalScale;
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         _renderer = GetComponentInChildren<Renderer>();
         _particlesPool = PoolsPool.Instance.StickmenExplosionPool;
+        _riggedTransform = transform.Find("RiggedMesh");
+        _originalScale = _riggedTransform.localScale.x;
     }
-    public void Initialize(Vector3 pos, float additionalHealth)
+    public void Initialize(Vector3 pos, float additionalHealth, bool bossMode)
     {
         base.Initialize();
         _health += additionalHealth;
+        if (bossMode)
+        {
+            _health += 2 * additionalHealth;
+            _riggedTransform.localScale = Vector3.one * _originalScale * 2f;
+        }
         transform.position = pos;
-
         _rb.velocity = new Vector3(0, 0, -velocity);
     }
     protected override void HitVisuals()

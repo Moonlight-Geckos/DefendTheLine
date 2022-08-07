@@ -49,7 +49,7 @@ public abstract class Target : MonoBehaviour
     {
         return ((Target)other).id == id;
     }
-    protected void Dispose()
+    protected virtual void Dispose()
     {
         if (_disposable == null)
         {
@@ -63,6 +63,7 @@ public abstract class Target : MonoBehaviour
     protected virtual void DamagePlayer()
     {
         EventsPool.DamagePlayerEvent.Invoke(this);
+        DeadVisuals();
         Dispose();
     }
 }

@@ -31,16 +31,18 @@ Shader "Custom/OptimizedTransparent"
                     float4 vertex : SV_POSITION;
                 };
 
+                sampler2D _MainTex;
+                float4 _MainTex_ST;
+                fixed4 _Color;
+
                 v2f vert(appdata v)
                 {
                     v2f o;
                     o.vertex = UnityObjectToClipPos(v.vertex);
-                    o.uv = v.uv;
+                    o.uv = v.uv * _MainTex_ST.xy + _MainTex_ST.zw;
                     return o;
                 }
 
-                sampler2D _MainTex;
-                fixed4 _Color;
 
                 fixed4 frag(v2f i) : SV_Target
                 {

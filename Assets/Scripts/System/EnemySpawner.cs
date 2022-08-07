@@ -15,13 +15,13 @@ public class EnemySpawner : MonoBehaviour
 
     private Timer _spawnTimer;
     private float _additionalEnemiesHealth;
+    private int _enemiesLeftToSpawn;
 
     private void Awake()
     {
         _additionalEnemiesHealth = 0;
 
         EventsPool.EnemyDiedEvent.AddListener(IncreaseDifficulty);
-
     }
     private void Start()
     {
@@ -46,15 +46,25 @@ public class EnemySpawner : MonoBehaviour
         _spawnTimer.AddTimerFinishedEventListener(Spawn);
         _spawnTimer.Duration = spawnCooldown;
 
+        _enemiesLeftToSpawn = GameManager.Instance.EnemiesToSpawn;
+
         EventsPool.GameStartedEvent.AddListener(Spawn);
     }
     private void Spawn()
     {
-        _newPos.x = Random.Range(_bottomLeftCorner.x + 0.5f, _bottomRightCorner.x - 0.5f);
-        var enemy = enemiesPools[Random.Range(0, enemiesPools.Length)].Pool.Get();
-        enemy.Initialize(_newPos, Random.Range(_additionalEnemiesHealth - _additionalEnemiesHealth/2f, _additionalEnemiesHealth + _additionalEnemiesHealth / 2f));
-        enemy.transform.LookAt(-Vector3.forward);
+        if (_enemiesLeftToSpawn <= 0)
+            return;
 
+        _newPos.x = Random.Range(_bottomLeftCorner.x + 0.5f, _bottomRightCorner.x - 0.5f);
+
+        bool boss = Random.Range(0f, 1f) < 0.1f;
+
+        var enemy = enemiesPools[Random.Range(0, enemiesPools.Length)].Pool.Get();
+        enemy.Initialize(_newPos,
+            Random.Range(_additionalEnemiesHealth - _additionalEnemiesHealth / 2f, _additionalEnemiesHealth + _additionalEnemiesHealth / 2f),
+            boss);
+        enemy.transform.LookAt(-Vector3.forward);
+        _enemiesLeftToSpawn--;
         _spawnTimer.Run();
     }
     private void IncreaseDifficulty(Target t)

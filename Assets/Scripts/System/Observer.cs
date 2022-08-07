@@ -11,6 +11,9 @@ public class Observer : MonoBehaviour
     private static int uniqueId;
     private static int _currentHealth;
     private static int _availablePoints;
+    private static int _enemiesToKill;
+    private static int _spawnedEnemies;
+    private static int _killedEnemies;
 
     public bool Finished
     {
@@ -67,6 +70,11 @@ public class Observer : MonoBehaviour
     {
         if(_targets != null)
             _targets.UpdatePositions();
+
+        if (_started && _enemiesToKill <= 0 && _spawnedEnemies <= 0)
+        {
+            EventsPool.GameFinishedEvent.Invoke(true);
+        }
     }
     public Target GetClosestTarget(Vector3 pos)
     {
@@ -78,24 +86,37 @@ public class Observer : MonoBehaviour
     }
     private void StartGame()
     {
-        _started = true;
         uniqueId = 0;
+        _killedEnemies = 0;
+        _enemiesToKill = GameManager.Instance.EnemiesToSpawn;
         _availablePoints = GameManager.Instance.StartingPoints;
         _targets = new KdTree<Target>();
         _currentHealth = GameManager.Instance.MaxPlayerHealth;
         _playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
+
+        _started = true;
     }
     private void FinishGame(bool w)
     {
+        _started = false;
         _finished = true;
     }
     private void AddTarget(Target target)
     {
+        var t = _targets.Count;
         _targets.Add(target);
+        if (t == _targets.Count)
+        {
+            Debug.LogWarning("Didnt add");
+            return;
+        }
+        _enemiesToKill--;
+        _spawnedEnemies++;
     }
     private void EnemyDied(Target target)
     {
         _availablePoints++;
+        _killedEnemies++;
     }
     private void RemoveTarget(Target target)
     {
@@ -104,7 +125,9 @@ public class Observer : MonoBehaviour
         if(t == _targets.Count)
         {
             Debug.LogWarning("Didnt remove");
+            return;
         }
+        _spawnedEnemies--;
     }
     private void PlayerDamaged(Target t)
     {

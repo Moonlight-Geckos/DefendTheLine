@@ -107,9 +107,11 @@ public class Blob : MonoBehaviour
     {
         if (_shootingCooldown > 0)
             _shootingCooldown -= Time.deltaTime;
-        if(_currentTarget == null || !_currentTarget.gameObject.activeSelf)
+
+        _currentTarget = _observer.GetClosestTarget(transform.position);
+        if (_currentTarget == null || !_currentTarget.gameObject.activeSelf)
         {
-            _currentTarget = _observer.GetClosestTarget(transform.position);
+            return;
         }
         else if(_shootingCooldown <= 0 && !_moving)
         {

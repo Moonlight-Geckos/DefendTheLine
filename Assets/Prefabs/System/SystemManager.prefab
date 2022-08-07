@@ -51,6 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxPlayerHealth: 6
   startingPoints: 2
+  enemiesToSpawn: 50
 --- !u!114 &3903623678778322832
 MonoBehaviour:
   m_ObjectHideFlags: 0
