@@ -5,7 +5,7 @@ Shader "Custom/RectangleGrid" {
         _Color("Color", Color) = (1,1,1,1)
         _LineColor("LineColor", Color) = (1,1,1,1)
         _LineWidth("Line Width", Float) = 1
-        _Radius("Border Radius", Float) = 1
+        _LineOffset("Line Offset", Float) = 1
         _GridWidth("Grid Width", Range(0,10)) = 4
         _GridHeight("Grid Height", Range(0,10)) = 4
     }
@@ -24,7 +24,7 @@ Shader "Custom/RectangleGrid" {
         fixed4 _Color;
         fixed4 _LineColor;
         float _LineWidth;
-        float _Radius;
+        float _LineOffset;
         int _GridWidth;
         int _GridHeight;
 
@@ -35,10 +35,11 @@ Shader "Custom/RectangleGrid" {
             float2 uv_MainTex;
         };
 
-        float Unity_Rectangle_float(float2 UV, float Width, float Radius)
+        float Unity_Rectangle_float(float2 UV, float Width, float Height)
         {
-
-            return length(max(abs(UV * 2 - 1) - Width + Radius, 0.0)) - Radius;
+            float2 d = abs(UV * 2 - 1) - float2(Width, Height);
+            d = 1 - d / fwidth(d);
+            return saturate(min(d.x, d.y));
         }
         float2 Unity_TilingAndOffset_float(float2 UV, float2 Tiling, float2 Offset)
         {
@@ -51,13 +52,9 @@ Shader "Custom/RectangleGrid" {
 
         void surf(Input i, inout SurfaceOutputStandard o)
         {
-            float2 uvs = frac(Unity_TilingAndOffset_float(i.uv_MainTex, float2(_GridWidth, _GridHeight), 0)) ;
-            float rec = 1 - Unity_Rectangle_float(uvs, _LineWidth, _Radius);
-            fixed4 col;
-            if(rec > 0)
-                col =  _LineColor;
-            else
-                col = _Color;
+            float2 uvs = frac(Unity_TilingAndOffset_float(i.uv_MainTex, float2(_GridWidth, _GridHeight), _LineOffset)) ;
+            float rec = 1 - Unity_Rectangle_float(uvs, _LineWidth, _LineWidth);
+            fixed4 col = lerp(_Color, _LineColor, rec);
             o.Albedo = col;
         }
 
