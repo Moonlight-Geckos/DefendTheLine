@@ -14,13 +14,13 @@ public class ColorAssigner : MonoBehaviour
     [SerializeField]
     protected Assignment[] assignments;
 
-    protected ColorGenerator.ColorPalette _palette;
+    protected ThemeManager.ColorPalette _palette;
     protected Renderer _renderer;
 
     IEnumerator OnBecameVisible()
     {
         yield return null;
-        _palette = ColorGenerator.Instance.ActivePalette;
+        _palette = ThemeManager.Instance.ActivePalette;
         _renderer = GetComponent<Renderer>();
         AssignColor();
     }
@@ -35,7 +35,7 @@ public class ColorAssigner : MonoBehaviour
         {
             for (int i = 0; i < assignments.Length; i++)
             {
-                _renderer.materials[i].SetColor(assignments[i].name, _palette.colors[assignments[i].indexInPalette]);
+                _renderer.materials[i].color = _palette.colors[assignments[i].indexInPalette];
             }
         }
     }

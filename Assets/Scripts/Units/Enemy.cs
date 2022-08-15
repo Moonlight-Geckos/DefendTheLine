@@ -24,6 +24,12 @@ public class Enemy : Target
         _particlesPool = PoolsPool.Instance.StickmenExplosionPool;
         _riggedTransform = transform.Find("RiggedMesh");
         _originalScale = _riggedTransform.localScale.x;
+
+        _materials = new Dictionary<Material, Color>();
+        foreach (var material in _renderer.materials)
+        {
+            _materials.Add(material, material.color);
+        }
     }
     public void Initialize(Vector3 pos, float additionalHealth, bool bossMode)
     {
@@ -33,6 +39,10 @@ public class Enemy : Target
         {
             _health += 2 * additionalHealth;
             _riggedTransform.localScale = Vector3.one * _originalScale * 2f;
+        }
+        foreach (var mat in _materials.Keys)
+        {
+            mat.color = _materials.GetValueOrDefault(mat);
         }
         transform.position = pos;
         _rb.velocity = new Vector3(0, 0, -velocity);
@@ -45,26 +55,10 @@ public class Enemy : Target
     protected override void DeadVisuals()
     {
         var ps = _particlesPool.Pool.Get(); 
-        if (_materials == null)
-        {
-            _materials = new Dictionary<Material, Color>();
-            foreach (var material in _renderer.materials)
-            {
-                _materials.Add(material, material.color);
-            }
-        }
         ps.Initialize(transform.position, 0, _materials.First().Value);
     }
     private IEnumerator hit()
     {
-        if(_materials == null)
-        {
-            _materials = new Dictionary<Material, Color>();
-            foreach (var material in _renderer.materials)
-            {
-                _materials.Add(material, material.color);
-            }
-        }
         foreach (var mat in _materials.Keys)
         {
             mat.color = hitColor;

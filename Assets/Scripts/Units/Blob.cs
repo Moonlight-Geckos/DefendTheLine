@@ -190,10 +190,8 @@ public class Blob : MonoBehaviour
     }
     private void SetupColorAndName()
     {
-        var t = ColorGenerator.Instance.GenerateBlobPalette(_level);
-        _mainColor = t.Item2;
-        _renderer.material.SetColor("_Color", t.Item2);
-        _renderer.material.SetColor("_FresnelColor", t.Item1);
+        var mat = ThemeManager.Instance.GetBlobMaterialByLevel(_level);
+        _renderer.material = mat;
         name = _level.ToString();
     }
 
