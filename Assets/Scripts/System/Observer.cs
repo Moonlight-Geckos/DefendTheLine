@@ -7,7 +7,7 @@ public class Observer : MonoBehaviour
 
     private static Observer _instance;
     private static Transform _playerTransform;
-    private static KdTree<Target> _targets;
+    private static LinkedList<Target> _targets;
     private static int uniqueId;
     private static int _currentHealth;
     private static int _availablePoints;
@@ -68,21 +68,21 @@ public class Observer : MonoBehaviour
     }
     private void Update()
     {
-        if(_targets != null)
-            _targets.UpdatePositions();
-
         if (_started && _enemiesToKill <= 0 && _spawnedEnemies <= 0)
         {
             EventsPool.GameFinishedEvent.Invoke(true);
         }
     }
-    public Target GetClosestTarget(Vector3 pos)
+    public Target GetClosestTarget()
     {
-        return _targets.FindClosest(pos);
+        if (_targets.First != null)
+            return _targets.First.Value;
+        else
+            return null;
     }
     public IEnumerable<Target> GetCloseTargets(Vector3 pos)
     {
-        return _targets.FindClose(pos);
+        return _targets;
     }
     private void StartGame()
     {
@@ -90,7 +90,7 @@ public class Observer : MonoBehaviour
         _killedEnemies = 0;
         _enemiesToKill = GameManager.Instance.EnemiesToSpawn;
         _availablePoints = GameManager.Instance.StartingPoints;
-        _targets = new KdTree<Target>();
+        _targets = new LinkedList<Target>();
         _currentHealth = GameManager.Instance.MaxPlayerHealth;
         _playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
 
@@ -104,12 +104,7 @@ public class Observer : MonoBehaviour
     private void AddTarget(Target target)
     {
         var t = _targets.Count;
-        _targets.Add(target);
-        if (t == _targets.Count)
-        {
-            Debug.LogWarning("Didnt add");
-            return;
-        }
+        _targets.AddLast(target);
         _enemiesToKill--;
         _spawnedEnemies++;
     }
@@ -121,7 +116,7 @@ public class Observer : MonoBehaviour
     private void RemoveTarget(Target target)
     {
         var t = _targets.Count;
-        _targets.RemoveAll((x) => x.Equals(target));
+        _targets.Remove(target);
         if(t == _targets.Count)
         {
             Debug.LogWarning("Didnt remove");

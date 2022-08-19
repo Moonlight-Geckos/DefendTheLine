@@ -9,13 +9,17 @@ public class Enemy : Target
     private float velocity;
 
     [SerializeField]
+    private float rotationVelocity = 2f;
+
+    [SerializeField]
     private Color hitColor = Color.white;
 
-    private Rigidbody _rb;
     private ParticlesPool _particlesPool;
     private Dictionary<Material, Color> _materials;
-    private Renderer _renderer;
     private Transform _riggedTransform;
+    private Renderer _renderer;
+    protected Rigidbody _rb;
+    protected Vector3 direction;
     private float _originalScale;
     private void Awake()
     {
@@ -31,9 +35,20 @@ public class Enemy : Target
             _materials.Add(material, material.color);
         }
     }
-    public void Initialize(Vector3 pos, float additionalHealth, bool bossMode)
+    private void FixedUpdate()
+    {
+        _rb.MoveRotation(Quaternion.Lerp(transform.localRotation, Quaternion.LookRotation(direction, Vector3.up), Time.deltaTime * rotationVelocity * velocity));
+        _rb.velocity = transform.forward * velocity;
+    }
+    public void Initialize(Vector3 pos, Vector3 direction, float additionalHealth, bool bossMode)
     {
         base.Initialize();
+
+        transform.position = pos;
+        transform.forward = direction;
+        this.direction = direction;
+        _rb.velocity = direction * velocity;
+
         _health += additionalHealth;
         if (bossMode)
         {
@@ -44,8 +59,6 @@ public class Enemy : Target
         {
             mat.color = _materials.GetValueOrDefault(mat);
         }
-        transform.position = pos;
-        _rb.velocity = new Vector3(0, 0, -velocity);
     }
     protected override void HitVisuals()
     {
@@ -75,5 +88,9 @@ public class Enemy : Target
             elapsed += Time.deltaTime;
             yield return null;
         }
+    }
+    protected override void TurnTo(Vector3 direction)
+    {
+        this.direction = direction;
     }
 }

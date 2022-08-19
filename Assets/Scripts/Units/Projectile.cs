@@ -22,7 +22,7 @@ public abstract class Projectile : MonoBehaviour
             _canDamage = false;
 
         transform.position += _direction * _velocity * Time.deltaTime;
-        if(transform.position.z >= _target.transform.position.z)
+        if(Vector3.Dot(_direction, _target.transform.position - transform.position) <= 0)
         {
 
             if (_canDamage)

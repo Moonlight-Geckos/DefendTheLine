@@ -18,6 +18,10 @@ public abstract class Target : MonoBehaviour
         {
             DamagePlayer();
         }
+        else if(other.tag[0] == 'P')
+        {
+            TurnTo(other.transform.forward);
+        }
     }
     public void GetDamage(float damage)
     {
@@ -38,7 +42,7 @@ public abstract class Target : MonoBehaviour
     public virtual void Initialize()
     {
         _health = maxHealth;
-        if(id < 0)
+        if (id < 0)
             id = Observer.UniqueID;
     }
     public override int GetHashCode()
@@ -60,6 +64,7 @@ public abstract class Target : MonoBehaviour
     }
     protected abstract void DeadVisuals();
     protected abstract void HitVisuals();
+    protected abstract void TurnTo(Vector3 direction);
     protected virtual void DamagePlayer()
     {
         EventsPool.DamagePlayerEvent.Invoke(this);

@@ -325,6 +325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 3
   velocity: 1.5
+  rotationVelocity: 2
   hitColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!54 &-3935308784803240803
 Rigidbody:
@@ -339,7 +340,7 @@ Rigidbody:
   m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!135 &-5682120188087091223

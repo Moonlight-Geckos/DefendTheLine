@@ -37,14 +37,17 @@ public class EnemySpawner : MonoBehaviour
         _bottomLeftCorner = MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(0, 0, 0)), -2);
         var topright = MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(1, 1, 0)), transform.position.y);
         var topleft = MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(0, 1, 0)), transform.position.y);
-        transform.position = new Vector3((topleft.x + topright.x) / 2f, topleft.y, topleft.z);
-        _newPos = transform.position + Vector3.forward * 3f;
+        //transform.position = new Vector3((topleft.x + topright.x) / 2f, topleft.y, topleft.z);
     }
     private void SetupSpawning()
     {
         _spawnTimer = TimersPool.Instance.Pool.Get();
         _spawnTimer.AddTimerFinishedEventListener(Spawn);
         _spawnTimer.Duration = spawnCooldown;
+
+        _newPos = transform.position + (transform.forward * -5f);
+
+        Debug.DrawLine(_newPos, transform.position, Color.green, 10);
 
         _enemiesLeftToSpawn = GameManager.Instance.EnemiesToSpawn;
 
@@ -54,16 +57,12 @@ public class EnemySpawner : MonoBehaviour
     {
         if (_enemiesLeftToSpawn <= 0)
             return;
-
-        _newPos.x = Random.Range(_bottomLeftCorner.x + 0.5f, _bottomRightCorner.x - 0.5f);
-
         bool boss = Random.Range(0f, 1f) < 0.1f;
 
         var enemy = enemiesPools[Random.Range(0, enemiesPools.Length)].Pool.Get();
-        enemy.Initialize(_newPos,
+        enemy.Initialize(_newPos, transform.forward,
             Random.Range(_additionalEnemiesHealth - _additionalEnemiesHealth / 2f, _additionalEnemiesHealth + _additionalEnemiesHealth / 2f),
             boss);
-        enemy.transform.LookAt(-Vector3.forward);
         _enemiesLeftToSpawn--;
         _spawnTimer.Run();
     }
