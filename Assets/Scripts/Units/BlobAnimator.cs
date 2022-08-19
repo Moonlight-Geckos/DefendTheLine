@@ -1,70 +1,57 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BlobAnimator : MonoBehaviour
 {
+    private bool _coroutineRunning;
+    private IEnumerator SquashAndReflect(Vector3 normal)
+    {
+        _coroutineRunning = true;
 
-    IEnumerator wobbleCoroutine(Vector3 direction, float duration)
-    {
-        float elapsed = 0f;
-        float d;
-        direction = direction.normalized * 0.35f;
-        direction.y = 0;
-        Vector3 a = Vector3.zero + direction;
-        while (elapsed <= duration)
-        {
-            elapsed += Time.deltaTime;
-            d = Mathf.Clamp01(elapsed / duration);
-            transform.localPosition = Vector3.LerpUnclamped(Vector3.zero, a, (1 - d) * Mathf.Sin(Mathf.PI * d * 4));
-            yield return null;
-        }
-    }
+        var _fullDuration = 0.1f;
+        var _desiredModifier = 0.75f;
 
-    IEnumerator enrageCoroutine(float duration, float scaleUp)
-    {
-        float elapsed = 0f;
-        Vector3 puffScale = Vector3.one * 1.4f * scaleUp;
-        Vector3 originalScale = Vector3.one * 1.4f;
-        transform.localScale = originalScale;
-        while (elapsed <= duration)
-        {
-            elapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(transform.localScale, puffScale, Mathf.Clamp01(elapsed / duration));
-            yield return null;
-        }
-        elapsed = 0f;
-        while (elapsed <= duration)
-        {
-            elapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(transform.localScale, originalScale, Mathf.Clamp01(elapsed / duration));
-            yield return null;
-        }
-    }
-    IEnumerator puffupCoroutine(float duration)
-    {
-        float elapsed = 0f;
-        Vector3 originalScale = Vector3.one * 1.4f;
+        // Look at the direction of the normal
+        transform.rotation = Quaternion.LookRotation(normal);
 
-        transform.localScale = Vector3.zero;
-        while (elapsed <= duration)
+        // Cache the scale we are going to squash to and the according position offset
+        var _desiredScale = new Vector3(2 - _desiredModifier, 2 - _desiredModifier, _desiredModifier);
+        var _desiredPosition = Vector3.zero + (-transform.forward * (1 - _desiredModifier));
+
+
+        // We have two parts of the animation
+        // The first one is the squashing and the second one is the inflation
+        var _firstPartDuration = _fullDuration * 0.75f;
+        var _secondPartDuration = _fullDuration * 0.25f;
+
+        float elapsed = 0;
+
+        // Squash animation
+        while (elapsed < _firstPartDuration)
         {
             elapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(transform.localScale, originalScale, Mathf.Clamp01(elapsed / duration));
+            transform.localScale = Vector3.Lerp(Vector3.one, _desiredScale, Mathf.Clamp01(elapsed / _firstPartDuration));
+            transform.localPosition = Vector3.Lerp(Vector3.zero, _desiredPosition, Mathf.Clamp01(elapsed / _firstPartDuration));
+            yield return null;
+        }
+
+        elapsed = 0;
+
+        // Inflation animation
+        while (elapsed < _secondPartDuration)
+        {
+            elapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(_desiredScale, Vector3.one, Mathf.Clamp01(elapsed / _secondPartDuration));
+            transform.localPosition = Vector3.Lerp(_desiredPosition, Vector3.zero, Mathf.Clamp01(elapsed / _secondPartDuration));
+            _coroutineRunning = false;
+
             yield return null;
         }
     }
-    public void Wobble(float duration, Vector3 direction)
+    public void Squash(Vector3 normal)
     {
-        StartCoroutine(wobbleCoroutine(direction, duration));
-    }
-    public void Enrage(float duration, float scaleUp)
-    {
-        StartCoroutine(enrageCoroutine(duration, scaleUp));
-    }
-    public void Puffup(float duration)
-    {
-        StartCoroutine(puffupCoroutine(duration));
+        if(!_coroutineRunning)
+            StartCoroutine(SquashAndReflect(normal));
     }
 
 }

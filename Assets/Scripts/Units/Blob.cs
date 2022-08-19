@@ -17,24 +17,27 @@ public class Blob : MonoBehaviour
     {
         get { return _level; }
     }
+
     private int _level;
-    private DataHolder _dataHolder;
     private Observer _observer;
-    private IDisposable _disposable;
 
     private Target _currentTarget;
     private ProjectilesPool _normalProjectilesPool;
     private ProjectilesPool _explosiveProjectilesPool;
 
     private Renderer _renderer;
-    public Vector3 _currentPos;
+    private Collider _collider;
+    private Rigidbody _rb;
+    private BlobAnimator _blobAnimator;
+    private IDisposable _disposable;
 
     private Color _mainColor;
-    private BlobAnimator _blobAnimator;
 
+    private Vector3 _lastVelocity;
     private float _shootingCooldown;
     private string _atktype;
-    private bool _moving;
+    private bool _levelingUp;
+    private GameObject _lastMergedBlob;
 
     public Color MainColor
     {
@@ -85,8 +88,11 @@ public class Blob : MonoBehaviour
     }
 
     #endregion
+
     private void Awake()
     {
+        _rb = GetComponent<Rigidbody>();
+        _collider = GetComponent<Collider>();
         _renderer = GetComponentInChildren<Renderer>();
         _renderer.material.SetFloat("_RandomNum", Random.value);
 
@@ -94,7 +100,6 @@ public class Blob : MonoBehaviour
 
         _normalProjectilesPool = PoolsPool.Instance.NormalProjectilesPool;
         _explosiveProjectilesPool = PoolsPool.Instance.ExplosiveProjectilesPool;
-        _dataHolder = DataHolder.Instance;
         _observer = Observer.Instance;
 
         _attackTypes = new Dictionary<int, string>();
@@ -105,6 +110,8 @@ public class Blob : MonoBehaviour
     }
     private void Update()
     {
+        if (_level == -1)
+            return;
         if (_shootingCooldown > 0)
             _shootingCooldown -= Time.deltaTime;
 
@@ -113,40 +120,50 @@ public class Blob : MonoBehaviour
         {
             return;
         }
-        else if(_shootingCooldown <= 0 && !_moving)
-        {
-            Attack();
-        }
+    }
+    private void LateUpdate()
+    {
+        _lastMergedBlob = null;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.name[0] > name[0] && _level > -1)
+        // Merge
+        if (collision.collider.name[0] == name[0] && _level > -1)
         {
-            other.GetComponent<Blob>().Wobble(0.45f, (other.transform.position - transform.position).normalized);
+            var otherBlob = collision.collider.GetComponent<Blob>();
+            otherBlob.LevelUp(this.gameObject);
+            MergeIntoAnother(collision.collider.transform);
             _level = -1;
-            Dispose();
+        }
+        // Reflect
+        else
+        {
+            if ((collision.collider.name[0] == 'B' || collision.collider.gameObject != _lastMergedBlob)
+                && Vector3.Dot(_lastVelocity, collision.contacts[0].normal) < 0)
+            {
+                _blobAnimator.Squash(collision.contacts[0].normal);
+
+                _rb.velocity = Vector3.Reflect(_lastVelocity, collision.contacts[0].normal);
+            }
+            else
+            {
+                _rb.velocity = _lastVelocity;
+            }
+            _lastVelocity = _rb.velocity;
         }
     }
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.name[0] > name[0] && _level > -1)
-        {
-            other.GetComponent<Blob>().Wobble(0.45f, (other.transform.position - transform.position).normalized);
-            _level = -1;
-            Dispose();
-        }
-    }
-    public void Initialize(Vector3 pos)
+    public void Initialize()
     {
         _level = 0;
-        _moving = false;
+        _levelingUp = false;
         _currentTarget = null;
         _shootingCooldown = 0;
-        _currentPos = pos * 2f;
-        _currentPos.y = 0.5f;
-        _blobAnimator.Puffup(0.5f);
-        SetupColorAndName();
+        _collider.enabled = true;
+        transform.localScale = Vector3.one;
+        _rb.velocity = Vector3.forward * Random.Range(-10, 10f) + Vector3.right * Random.Range(-10, 10f);
+        _lastVelocity = _rb.velocity;
+        SetupVisuals();
     }
     public void Dispose()
     {
@@ -156,6 +173,7 @@ public class Blob : MonoBehaviour
     }
     public void Move(Vector3 position)
     {
+        /*
         Vector3 _originalPos = _currentPos;
         _currentPos = position * 2;
         _currentPos.y = 0.5f;
@@ -173,26 +191,85 @@ public class Blob : MonoBehaviour
             _moving = false;
         }
         StartCoroutine(move(6f));
+        */
     }
-    public void Merge()
+    private void MergeIntoAnother(Transform parentBlob)
+    {
+        var parent = transform.parent;
+        _collider.enabled = false;
+        _rb.velocity = Vector3.zero;
+        transform.parent = parentBlob;
+
+        IEnumerator animate()
+        {
+            float elapsed = 0;
+
+            yield return null;
+            var ors = transform.localScale;
+            var orp = transform.localPosition;
+            while (elapsed < 1)
+            {
+                elapsed += Time.deltaTime;
+                transform.localScale = Vector3.Lerp(ors, Vector3.zero, Mathf.Clamp01(elapsed));
+                transform.localPosition = Vector3.Lerp(orp, Vector3.zero, Mathf.Clamp01(elapsed));
+                yield return null;
+            }
+            transform.parent = parent;
+            Dispose();
+        }
+        StartCoroutine(animate());
+        _level = -1;
+    }
+    public void LevelUp(GameObject fromBlob)
     {
         _level++;
-        SetupColorAndName();
+        _lastMergedBlob = fromBlob;
+        SetupVisuals(true);
+        IEnumerator scaleUp()
+        {
+            float elapsed = 0;
+            var or = transform.localScale;
+            var s = Vector3.one + (Vector3.one * _level * 0.2f);
+            _levelingUp = true;
+            while (elapsed < 1)
+            {
+                elapsed += Time.deltaTime;
+                elapsed = Mathf.Clamp01(elapsed);
+                transform.localScale = Vector3.Lerp(or, s, elapsed);
+                yield return null;
+            }
+            _levelingUp = false;
+        }
+        StartCoroutine(scaleUp());
     }
-    private void Wobble(float duration, Vector3 direction)
+    private void SetupVisuals(bool lerpColors = false)
     {
-        Enrage(duration / 3f, 1.55f);
-        _blobAnimator.Wobble(duration, direction);
-    }
-    private void Enrage(float duration, float scaleUp)
-    {
-        _blobAnimator.Enrage(duration, scaleUp);
-    }
-    private void SetupColorAndName()
-    {
-        var mat = ThemeManager.Instance.GetBlobMaterialByLevel(_level);
-        _renderer.material = mat;
         name = _level.ToString();
+        var mat = ThemeManager.Instance.GetBlobMaterialByLevel(_level);
+        if (!lerpColors)
+        {
+            _renderer.material = mat;
+        }
+        else
+        {
+            IEnumerator lerp()
+            {
+                float elapsed = 0;
+                var b = _renderer.material.color;
+                var f = _renderer.material.GetColor("_FresnelColor");
+                var b2 = mat.color;
+                var f2 = mat.GetColor("_FresnelColor");
+                while (elapsed < 1)
+                {
+                    elapsed += Time.deltaTime;
+                    elapsed = Mathf.Clamp01(elapsed);
+                    _renderer.material.color = Color.Lerp(b, b2, elapsed);
+                    _renderer.material.SetColor("_FresnelColor", Color.Lerp(f, f2, elapsed));
+                    yield return null;
+                }
+            }
+            StartCoroutine(lerp());
+        }
     }
 
     private void Attack()
@@ -200,14 +277,14 @@ public class Blob : MonoBehaviour
         _attackTypes.TryGetValue(_level % 5, out _atktype);
         if (_atktype != null)
         {
-            if (gameObject.activeSelf && !_moving)
+            if (gameObject.activeSelf && !_levelingUp)
             {
                 StartCoroutine(_atktype);
             }
         }
         else
         {
-            if (gameObject.activeSelf && !_moving)
+            if (gameObject.activeSelf && !_levelingUp)
             {
                 StartCoroutine("lvl0");
             }
@@ -215,7 +292,6 @@ public class Blob : MonoBehaviour
     }
     private void Shoot(ProjectilesPool pool, Target target)
     {
-        Enrage(0.1f, 1.35f);
         var projectile = pool.Pool.Get();
         projectile.transform.position = transform.position;
         projectile.Initialize(_renderer.material, target, projectileSpeed, _level + 1);

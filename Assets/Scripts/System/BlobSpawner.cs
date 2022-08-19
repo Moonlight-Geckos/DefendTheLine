@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class BlobSpawner : MonoBehaviour
 {
-    private GridManager _gridManager;
     private BlobsPool _blobPool;
     private static int _spawnCost;
 
@@ -18,10 +17,17 @@ public class BlobSpawner : MonoBehaviour
     private void Start()
     {
         _blobPool = PoolsPool.Instance.BlobsPool;
-        _gridManager = GridManager.Instance;
     }
     private void SpawnBlob()
     {
+        var pos = BlobZone.ZoneBounds.center +
+            (Vector3.right * Random.Range(-0.4f, 0.4f) * BlobZone.ZoneBounds.size.x) +
+            (Vector3.forward * Random.Range(-0.4f, 0.4f) * BlobZone.ZoneBounds.size.z);
+
+        var blob = _blobPool.Pool.Get();
+        blob.Initialize();
+        blob.transform.position = pos;
+        /*
         if(Observer.AvailablePoints < _spawnCost)
             return;
         var pos = _gridManager.GetEmptyCell();
@@ -34,5 +40,6 @@ public class BlobSpawner : MonoBehaviour
             Observer.AvailablePoints -= _spawnCost;
             _spawnCost ++;
         }
+        */
     }
 }

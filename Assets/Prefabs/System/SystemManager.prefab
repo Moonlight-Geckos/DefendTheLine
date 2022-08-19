@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3903623678778322845}
   - component: {fileID: 6965859158887782208}
   - component: {fileID: 6799526071619568616}
+  - component: {fileID: 5091544191177347434}
   m_Layer: 0
   m_Name: SystemManager
   m_TagString: Untagged
@@ -131,7 +132,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   randomizerSeed: 67163
-  hueShifting: 0
   palettes:
   - colors:
     - {r: 0.39215687, g: 0.17254902, b: 0.6627451, a: 1}
@@ -157,3 +157,16 @@ MonoBehaviour:
     - {r: 0.9411765, g: 0.32941177, b: 0.30980393, a: 1}
     - {r: 0.99215686, g: 0.9411765, b: 0.8352941, a: 1}
     - {r: 0.7764706, g: 0.84705883, b: 0.827451, a: 1}
+  blobMaterials: []
+--- !u!114 &5091544191177347434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3903623678778322838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a13905330f8b4b0449fb24d6070ce2fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -522,7 +522,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112670412552919053}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0.7071068, w: 0}
-  m_LocalPosition: {x: 0, y: 0.05, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -901,7 +901,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3817674011906935023}
   - component: {fileID: 648303467255992879}
-  - component: {fileID: 2459558530704297774}
   m_Layer: 7
   m_Name: polySurface77
   m_TagString: Untagged
@@ -944,7 +943,8 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4b0e575bfdbbb6942b326983b122b861, type: 2}
+  - {fileID: 2100000, guid: a7ff8483263a17842a5c07daa637a355, type: 2}
+  - {fileID: 2100000, guid: 40d5f549169a4c14ca6aa038d99649cf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1011,21 +1011,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.011087298, y: 1.2154518, z: 0.098820806}
     m_Extent: {x: 3.3677874, y: 4.440016, z: 1.746271}
   m_DirtyAABB: 0
---- !u!114 &2459558530704297774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3839489249966291166}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db912859debc77c4db8fb5518eb860b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  assignments:
-  - name: _Color
-    indexInPalette: 2
 --- !u!1 &4072689716869391146
 GameObject:
   m_ObjectHideFlags: 0
