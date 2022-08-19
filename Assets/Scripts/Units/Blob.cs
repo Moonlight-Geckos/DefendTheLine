@@ -31,6 +31,7 @@ public class Blob : MonoBehaviour
     private Collider _collider;
     private Rigidbody _rb;
     private BlobAnimator _blobAnimator;
+    private GameObject _lastMergedBlob;
     private IDisposable _disposable;
 
     private Color _mainColor;
@@ -39,7 +40,7 @@ public class Blob : MonoBehaviour
     private float _shootingCooldown;
     private string _atktype;
     private bool _levelingUp;
-    private GameObject _lastMergedBlob;
+    private bool _colliding;
 
     public Color MainColor
     {
@@ -130,14 +131,18 @@ public class Blob : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        ProcessCollision(collision);
+        StartCoroutine(ProcessCollision(collision));
     }
     private void OnCollisionStay(Collision collision)
     {
-        ProcessCollision(collision);
+        StartCoroutine(ProcessCollision(collision));
     }
-    private void ProcessCollision(Collision collision)
+    private IEnumerator ProcessCollision(Collision collision)
     {
+        if (_colliding)
+            yield break;
+        _colliding = true;
+
         // Merge
         if (collision.collider.name[0] == name[0] && _level > -1 && !_levelingUp)
         {
@@ -152,7 +157,9 @@ public class Blob : MonoBehaviour
             if ((collision.collider.name[0] == 'B' || collision.collider.gameObject != _lastMergedBlob)
                 && Vector3.Dot(_lastVelocity, collision.contacts[0].normal) < 0)
             {
-                _blobAnimator.Squash(collision.contacts[0].normal);
+                _blobAnimator.Squash(collision.contacts[0].normal, _lastVelocity, maxBlobSpeed);
+
+                yield return new WaitForSeconds(0.1f);
 
                 _rb.velocity = Vector3.Reflect(_lastVelocity, collision.contacts[0].normal);
             }
@@ -162,6 +169,7 @@ public class Blob : MonoBehaviour
             }
             _lastVelocity = _rb.velocity;
         }
+        _colliding = false;
     }
     public void Initialize()
     {
@@ -233,6 +241,7 @@ public class Blob : MonoBehaviour
         _level++;
         _lastMergedBlob = fromBlob;
         SetupVisuals(true);
+        _levelingUp = true;
         IEnumerator scaleUp()
         {
             float elapsed = 0;

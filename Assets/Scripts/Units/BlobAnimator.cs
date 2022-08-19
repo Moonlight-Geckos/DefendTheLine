@@ -3,13 +3,21 @@ using UnityEngine;
 
 public class BlobAnimator : MonoBehaviour
 {
+    [SerializeField]
+    private float maxSquashDuration = 0.2f;
+
+    [SerializeField]
+    private float maxSquashScaleModifier = 0.75f;
+
     private bool _coroutineRunning;
-    private IEnumerator SquashAndReflect(Vector3 normal)
+    private IEnumerator SquashAndReflect(Vector3 normal, Vector3 lastVelocity, float maxVelocity)
     {
         _coroutineRunning = true;
 
-        var _fullDuration = 0.1f;
-        var _desiredModifier = 0.75f;
+        var _intensity = Mathf.Abs(Vector3.Dot(lastVelocity.normalized, normal)) * Mathf.Clamp01(lastVelocity.magnitude / maxVelocity);
+
+        var _fullDuration = Mathf.Lerp(0.01f, maxSquashDuration, _intensity);
+        var _desiredModifier = Mathf.Lerp(maxSquashScaleModifier, 1, 1 - _intensity);
 
         // Look at the direction of the normal
         transform.rotation = Quaternion.LookRotation(normal);
@@ -48,10 +56,10 @@ public class BlobAnimator : MonoBehaviour
             yield return null;
         }
     }
-    public void Squash(Vector3 normal)
+    public void Squash(Vector3 normal, Vector3 lastVelocity, float maxVelocity)
     {
         if(!_coroutineRunning)
-            StartCoroutine(SquashAndReflect(normal));
+            StartCoroutine(SquashAndReflect(normal, lastVelocity, maxVelocity));
     }
 
 }
