@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Blob : MonoBehaviour
 {
+    [SerializeField]
+    private float maxBlobSpeed = 6f;
 
     [SerializeField]
     private float projectileSpeed = 60f;
@@ -128,8 +130,16 @@ public class Blob : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        ProcessCollision(collision);
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        ProcessCollision(collision);
+    }
+    private void ProcessCollision(Collision collision)
+    {
         // Merge
-        if (collision.collider.name[0] == name[0] && _level > -1)
+        if (collision.collider.name[0] == name[0] && _level > -1 && !_levelingUp)
         {
             var otherBlob = collision.collider.GetComponent<Blob>();
             otherBlob.LevelUp(this.gameObject);
@@ -161,7 +171,7 @@ public class Blob : MonoBehaviour
         _shootingCooldown = 0;
         _collider.enabled = true;
         transform.localScale = Vector3.one;
-        _rb.velocity = Vector3.forward * Random.Range(-10, 10f) + Vector3.right * Random.Range(-10, 10f);
+        _rb.velocity = Vector3.forward * Random.Range(-maxBlobSpeed, maxBlobSpeed) + Vector3.right * Random.Range(-maxBlobSpeed, maxBlobSpeed);
         _lastVelocity = _rb.velocity;
         SetupVisuals();
     }
@@ -205,13 +215,11 @@ public class Blob : MonoBehaviour
             float elapsed = 0;
 
             yield return null;
-            var ors = transform.localScale;
-            var orp = transform.localPosition;
             while (elapsed < 1)
             {
                 elapsed += Time.deltaTime;
-                transform.localScale = Vector3.Lerp(ors, Vector3.zero, Mathf.Clamp01(elapsed));
-                transform.localPosition = Vector3.Lerp(orp, Vector3.zero, Mathf.Clamp01(elapsed));
+                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, Mathf.Clamp01(elapsed));
+                transform.localPosition = Vector3.Lerp(transform.localPosition, Vector3.zero, Mathf.Clamp01(elapsed));
                 yield return null;
             }
             transform.parent = parent;
@@ -240,6 +248,7 @@ public class Blob : MonoBehaviour
             }
             _levelingUp = false;
         }
+        StopCoroutine("scaleUp");
         StartCoroutine(scaleUp());
     }
     private void SetupVisuals(bool lerpColors = false)
@@ -268,6 +277,7 @@ public class Blob : MonoBehaviour
                     yield return null;
                 }
             }
+            StopCoroutine("lerp");
             StartCoroutine(lerp());
         }
     }

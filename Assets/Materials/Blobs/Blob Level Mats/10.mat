@@ -86,7 +86,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
-    - _Amplitude: 0.25
+    - _Amplitude: 0.3
     - _Blend: 0
     - _BumpScale: 1
     - _CastShadows: 1
@@ -100,8 +100,8 @@ Material:
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
-    - _NoiseScale: 7.5
-    - _NoiseSpeed: 0.561
+    - _NoiseScale: 9.3
+    - _NoiseSpeed: 0.89
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueControl: 0
