@@ -8,7 +8,8 @@ public class CameraScaler : MonoBehaviour
         var camera2 = transform.GetChild(0).GetComponent<Camera>();
 
         float height = camera.transform.position.y;
-        float frustumWidth = Mathf.Abs(GameObject.FindGameObjectWithTag("Destination").transform.position.x * 2) - 1;
+        var castle = GameObject.FindGameObjectWithTag("Destination");
+        float frustumWidth = (Mathf.Abs(castle.transform.position.x)  + castle.GetComponent<BoxCollider>().size.x * castle.transform.localScale.x) * 2;
 
         var frustumHeight = frustumWidth / camera.aspect;
         var fov = 2.0f * Mathf.Atan(frustumHeight * 0.5f / height) * Mathf.Rad2Deg;

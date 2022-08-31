@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSquashDuration: 0.1
-  maxSquashScaleModifier: 0.8
+  maxSquashScaleModifier: 0.75
 --- !u!1 &5692682595400778029
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8596520c731b3b843ab8347a58f4a844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxBlobSpeed: 5
+  maxBlobSpeed: 8
   projectileSpeed: 60
   startingShootingCooldown: 1
   decreasingShootingCooldownPerLevel: 0.05

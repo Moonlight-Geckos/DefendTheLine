@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -9,12 +10,13 @@ public class EnemySpawner : MonoBehaviour
     [Range(0f, 10f)]
     private float spawnCooldown;
 
-    private Vector3 _bottomRightCorner;
-    private Vector3 _bottomLeftCorner;
-    private Vector3 _newPos;
+    private Vector3 _rightCorner;
+    private Vector3 _leftCorner;
+    private Vector3 _startPos;
 
     private Timer _spawnTimer;
     private float _additionalEnemiesHealth;
+    private float _boundaries;
     private int _enemiesLeftToSpawn;
 
     private void Awake()
@@ -31,40 +33,38 @@ public class EnemySpawner : MonoBehaviour
 
     private void SetupPositions()
     {
-        var camera = Camera.main;
+        var collider = GetComponent<BoxCollider>();
+        _boundaries = collider.size.x / 2f;
 
-        _bottomRightCorner = MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(1, 0, 0)), -2);
-        _bottomLeftCorner = MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(0, 0, 0)), -2);
-        var topright = MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(1, 1, 0)), transform.position.y);
-        var topleft = MathHelper.GetPointAtHeight(camera.ViewportPointToRay(new Vector3(0, 1, 0)), transform.position.y);
         //transform.position = new Vector3((topleft.x + topright.x) / 2f, topleft.y, topleft.z);
     }
     private void SetupSpawning()
     {
         _spawnTimer = TimersPool.Instance.Pool.Get();
-        _spawnTimer.AddTimerFinishedEventListener(Spawn);
+        _spawnTimer.AddTimerFinishedEventListener(SpawnWithPattern);
         _spawnTimer.Duration = spawnCooldown;
 
-        _newPos = transform.position + (transform.forward * -5f);
+        _startPos = transform.position + (transform.forward * -5f);
 
-        Debug.DrawLine(_newPos, transform.position, Color.green, 10);
+        Debug.DrawLine(_startPos, transform.position, Color.green, 10);
 
         _enemiesLeftToSpawn = GameManager.Instance.EnemiesToSpawn;
 
-        EventsPool.GameStartedEvent.AddListener(Spawn);
+        EventsPool.GameStartedEvent.AddListener(SpawnWithPattern);
     }
-    private void Spawn()
+    private void SpawnWithPattern()
+    {
+        StartCoroutine(midnfast());
+    }
+    private void Spawn(Vector3 position, int poolIndex, bool boss)
     {
         if (_enemiesLeftToSpawn <= 0)
             return;
-        bool boss = Random.Range(0f, 1f) < 0.1f;
 
-        var enemy = enemiesPools[Random.Range(0, enemiesPools.Length)].Pool.Get();
-        enemy.Initialize(_newPos, transform.forward,
+        var enemy = enemiesPools[poolIndex].Pool.Get();
+        enemy.Initialize(position, transform.forward,
             Random.Range(_additionalEnemiesHealth - _additionalEnemiesHealth / 2f, _additionalEnemiesHealth + _additionalEnemiesHealth / 2f),
             boss);
-        _enemiesLeftToSpawn--;
-        _spawnTimer.Run();
     }
     private void IncreaseDifficulty(Target t)
     {
@@ -85,5 +85,40 @@ public class EnemySpawner : MonoBehaviour
     private void DecreaseCooldown()
     {
         _spawnTimer.Duration -= 0.05f;
+    }
+    private IEnumerator fastguys()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            var pos = _startPos + Random.Range(-_boundaries, _boundaries) * transform.right;
+            Spawn(pos, 0, false);
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+    private IEnumerator midnfast()
+    {
+        int spawnedmid = 0;
+        for (int i = 0; i < 6; i++)
+        {
+            int ind = 0;
+            if (spawnedmid < 2)
+            {
+                ind += Random.Range(0, 2);
+                spawnedmid += ind;
+            }
+
+            var pos = _startPos + Random.Range(-_boundaries, _boundaries) * transform.right;
+            Spawn(pos, ind, false);
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+    private IEnumerator allguys()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            var pos = _startPos + Random.Range(-_boundaries, _boundaries) * transform.right;
+            Spawn(pos, 0, false);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 }

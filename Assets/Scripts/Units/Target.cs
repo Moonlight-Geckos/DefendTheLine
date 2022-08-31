@@ -20,7 +20,7 @@ public abstract class Target : MonoBehaviour
         }
         else if(other.tag[0] == 'P')
         {
-            TurnTo(other.transform.forward);
+            TurnTo(other.transform.parent, other.transform.parent.forward);
         }
     }
     public void GetDamage(float damage)
@@ -64,7 +64,7 @@ public abstract class Target : MonoBehaviour
     }
     protected abstract void DeadVisuals();
     protected abstract void HitVisuals();
-    protected abstract void TurnTo(Vector3 direction);
+    protected abstract void TurnTo(Transform other, Vector3 direction);
     protected virtual void DamagePlayer()
     {
         EventsPool.DamagePlayerEvent.Invoke(this);

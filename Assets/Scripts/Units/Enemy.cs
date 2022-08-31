@@ -6,7 +6,10 @@ using UnityEngine;
 public class Enemy : Target
 {
     [SerializeField]
-    private float velocity;
+    private float maxVelocity;
+
+    [SerializeField]
+    private float minVelocity;
 
     [SerializeField]
     private float rotationVelocity = 2f;
@@ -21,6 +24,7 @@ public class Enemy : Target
     protected Rigidbody _rb;
     protected Vector3 direction;
     private float _originalScale;
+    private float _velocity;
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -37,17 +41,19 @@ public class Enemy : Target
     }
     private void FixedUpdate()
     {
-        _rb.MoveRotation(Quaternion.Lerp(transform.localRotation, Quaternion.LookRotation(direction, Vector3.up), Time.deltaTime * rotationVelocity * velocity));
-        _rb.velocity = transform.forward * velocity;
+        _velocity = Mathf.Max(_velocity - Time.fixedDeltaTime * 0.02f, minVelocity);
+        _rb.MoveRotation(Quaternion.Lerp(transform.localRotation, Quaternion.LookRotation(direction, Vector3.up), Time.fixedDeltaTime * rotationVelocity));
+        _rb.velocity = transform.forward * _velocity;
     }
     public void Initialize(Vector3 pos, Vector3 direction, float additionalHealth, bool bossMode)
     {
         base.Initialize();
 
+        _velocity = maxVelocity;
         transform.position = pos;
         transform.forward = direction;
         this.direction = direction;
-        _rb.velocity = direction * velocity;
+        _rb.velocity = direction * _velocity;
 
         _health += additionalHealth;
         if (bossMode)
@@ -89,7 +95,7 @@ public class Enemy : Target
             yield return null;
         }
     }
-    protected override void TurnTo(Vector3 direction)
+    protected override void TurnTo(Transform other, Vector3 direction)
     {
         this.direction = direction;
     }
