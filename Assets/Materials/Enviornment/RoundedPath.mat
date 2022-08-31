@@ -8,8 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RoundedPath
-  m_Shader: {fileID: -6465566751694194690, guid: 09b4df22fd71405499aa89e5c72e505f,
-    type: 3}
+  m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
   m_ValidKeywords:
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
@@ -26,7 +25,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: b6c895db76d0e8749b0ef9efd14b9e46, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -50,7 +49,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: b6c895db76d0e8749b0ef9efd14b9e46, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -87,6 +86,7 @@ Material:
     - _AlphaClip: 0
     - _AlphaMultiplier: 6.2
     - _Blend: 0
+    - _BlendOp: 0
     - _Blending: 3.66
     - _BumpScale: 1
     - _CastShadows: 0
@@ -110,6 +110,7 @@ Material:
     - _QueueOffset: 0
     - _Radius: 0.25
     - _ReceiveShadows: 1
+    - _SampleGI: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -121,8 +122,8 @@ Material:
     - _ZWrite: 0
     - _ZWriteControl: 0
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0.86666673, g: 1, b: 0.9333334, a: 1}
+    - _BaseColor: {r: 1, g: 0.83139104, b: 0.48490566, a: 1}
+    - _Color: {r: 1, g: 0.83139104, b: 0.48490554, a: 1}
     - _Color1: {r: 1, g: 0.84705883, b: 0.45490196, a: 1}
     - _Color2: {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

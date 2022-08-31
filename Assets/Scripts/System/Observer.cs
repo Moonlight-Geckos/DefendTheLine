@@ -46,6 +46,10 @@ public class Observer : MonoBehaviour
             EventsPool.UpdateUIEvent.Invoke();
         }
     }
+    public static int EnemiesKilled
+    {
+        get { return _killedEnemies; }
+    }
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -112,6 +116,7 @@ public class Observer : MonoBehaviour
     {
         _availablePoints++;
         _killedEnemies++;
+        _spawnedEnemies--;
     }
     private void RemoveTarget(Target target)
     {
@@ -122,7 +127,6 @@ public class Observer : MonoBehaviour
             Debug.LogWarning("Didnt remove");
             return;
         }
-        _spawnedEnemies--;
     }
     private void PlayerDamaged(Target t)
     {

@@ -9,6 +9,11 @@ public class ProgressBar : MonoBehaviour
     protected Slider slider;
     protected Image image;
 
+    public float Value
+    {
+        get { return slider.value; }
+    }
+
     private void Awake()
     {
         slider = GetComponent<Slider>();

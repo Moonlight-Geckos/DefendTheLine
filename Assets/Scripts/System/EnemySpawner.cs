@@ -10,19 +10,18 @@ public class EnemySpawner : MonoBehaviour
     [Range(0f, 10f)]
     private float spawnCooldown;
 
-    private Vector3 _rightCorner;
-    private Vector3 _leftCorner;
     private Vector3 _startPos;
 
     private Timer _spawnTimer;
     private float _additionalEnemiesHealth;
     private float _boundaries;
     private int _enemiesLeftToSpawn;
+    private float _chance;
 
     private void Awake()
     {
         _additionalEnemiesHealth = 0;
-
+        _chance = 0;
         EventsPool.EnemyDiedEvent.AddListener(IncreaseDifficulty);
     }
     private void Start()
@@ -54,17 +53,32 @@ public class EnemySpawner : MonoBehaviour
     }
     private void SpawnWithPattern()
     {
-        StartCoroutine(midnfast());
+
+        if (_enemiesLeftToSpawn <= 0)
+            return;
+
+        var rand = Random.Range(0, _chance);
+        if(rand <= 50)
+            StartCoroutine(fastguys());
+
+        else if (rand <= 80)
+            StartCoroutine(midnfast());
+
+        else
+            StartCoroutine(allguys());
+
+        if(Observer.EnemiesKilled < GameManager.Instance.EnemiesToSpawn)
+            _spawnTimer.Run();
+        _chance += spawnCooldown / 2f;
     }
     private void Spawn(Vector3 position, int poolIndex, bool boss)
     {
-        if (_enemiesLeftToSpawn <= 0)
-            return;
 
         var enemy = enemiesPools[poolIndex].Pool.Get();
         enemy.Initialize(position, transform.forward,
             Random.Range(_additionalEnemiesHealth - _additionalEnemiesHealth / 2f, _additionalEnemiesHealth + _additionalEnemiesHealth / 2f),
             boss);
+        _enemiesLeftToSpawn--;
     }
     private void IncreaseDifficulty(Target t)
     {

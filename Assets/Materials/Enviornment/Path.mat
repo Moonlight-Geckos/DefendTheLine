@@ -8,8 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Path
-  m_Shader: {fileID: -6465566751694194690, guid: 09b4df22fd71405499aa89e5c72e505f,
-    type: 3}
+  m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
   m_ValidKeywords:
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
@@ -21,12 +20,13 @@ Material:
     RenderType: Transparent
   disabledShaderPasses:
   - DepthOnly
+  - SHADOWCASTER
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: a76c7cbc44fd255469cabc1c9d80e41e, type: 3}
+        m_Scale: {x: 1, y: 1.6}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
@@ -49,8 +49,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: a76c7cbc44fd255469cabc1c9d80e41e, type: 3}
+        m_Scale: {x: 1, y: 1.6}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -122,10 +122,10 @@ Material:
     - _ZWrite: 0
     - _ZWriteControl: 0
     m_Colors:
-    - _BaseColor: {r: 0.86666673, g: 1, b: 0.9333334, a: 1}
-    - _Color: {r: 0.86666673, g: 1, b: 0.9333334, a: 1}
-    - _Color1: {r: 1, g: 0.847849, b: 0.02745098, a: 1}
-    - _Color2: {r: 0.84313726, g: 0.59607846, b: 0.33333334, a: 1}
+    - _BaseColor: {r: 1, g: 0.83139104, b: 0.48490566, a: 1}
+    - _Color: {r: 1, g: 0.83139104, b: 0.48490554, a: 1}
+    - _Color1: {r: 1, g: 0.847849, b: 0.45660377, a: 1}
+    - _Color2: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

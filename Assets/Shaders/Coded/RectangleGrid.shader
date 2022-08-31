@@ -1,7 +1,6 @@
 Shader "Custom/RectangleGrid" {
     Properties
     {
-        _MainTex("Albedo (RGB)", 2D) = "white" {}
         _Color("Color", Color) = (1,1,1,1)
         _LineColor("LineColor", Color) = (1,1,1,1)
         _LineWidth("Line Width", Float) = 1
@@ -21,8 +20,6 @@ Shader "Custom/RectangleGrid" {
             #pragma fragment frag
 
             #pragma target 3.0
-
-            sampler2D _MainTex;
 
             fixed4 _Color;
             fixed4 _LineColor;
