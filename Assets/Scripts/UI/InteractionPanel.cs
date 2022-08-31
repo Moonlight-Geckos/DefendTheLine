@@ -24,10 +24,11 @@ public class InteractionPanel : MonoBehaviour, IPointerDownHandler, IPointerMove
         _lastPos = data.position;
         Ray ray = Camera.main.ScreenPointToRay(_lastPos);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.SphereCast(ray, 1, out hit))
         {
             _blob = hit.transform.GetComponent<Blob>();
-            _blob.StartDrag();
+            if (_blob != null)
+                _blob.StartDrag();
         }
     }
     public void OnPointerUp(PointerEventData eventData)
@@ -44,7 +45,7 @@ public class InteractionPanel : MonoBehaviour, IPointerDownHandler, IPointerMove
         if (_blob == null)
             return;
         var data = (PointerEventData)eventData;
-        if ((data.position - _lastPos).magnitude < Screen.width / 3f)
+        if ((data.position - _lastPos).magnitude < Screen.width / 4.5f)
             return;
         var direction = (data.position - _lastPos).normalized;
         _blob.SwipeToDirection(direction);
