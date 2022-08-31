@@ -41,10 +41,15 @@ public class Blob : MonoBehaviour
     private string _atktype;
     private bool _levelingUp;
     private bool _colliding;
+    private bool _dragged;
 
     public Color MainColor
     {
         get { return _mainColor; }
+    }
+    public bool IsDragged
+    {
+        get { return _dragged; }
     }
 
     #region AttackTypes
@@ -143,7 +148,7 @@ public class Blob : MonoBehaviour
     }
     private IEnumerator ProcessCollision(Collision collision)
     {
-        if (_colliding)
+        if (_colliding || _dragged)
             yield break;
         _colliding = true;
 
@@ -151,6 +156,8 @@ public class Blob : MonoBehaviour
         if (collision.collider.name[0] == name[0] && _level > -1 && !_levelingUp)
         {
             var otherBlob = collision.collider.GetComponent<Blob>();
+            if (otherBlob.IsDragged)
+                yield break;
             otherBlob.LevelUp(this.gameObject);
             MergeIntoAnother(collision.collider.transform);
             _level = -1;
@@ -179,6 +186,7 @@ public class Blob : MonoBehaviour
     {
         _level = 0;
         _levelingUp = false;
+        _dragged = false;
         _currentTarget = null;
         _shootingCooldown = 0;
         _collider.enabled = true;
@@ -193,27 +201,16 @@ public class Blob : MonoBehaviour
             _disposable = GetComponent<IDisposable>();
         _disposable.Dispose();
     }
-    public void Move(Vector3 position)
+    public void SwipeToDirection(Vector3 direction)
     {
-        /*
-        Vector3 _originalPos = _currentPos;
-        _currentPos = position * 2;
-        _currentPos.y = 0.5f;
-
-        IEnumerator move(float cellSpeed)
-        {
-            float elapsed = 0f;
-            _moving = true;
-            while (elapsed <= 1)
-            {
-                elapsed += Time.deltaTime * cellSpeed;
-                transform.position = Vector3.Lerp(_originalPos, _currentPos, Mathf.Clamp01(elapsed));
-                yield return null;
-            }
-            _moving = false;
-        }
-        StartCoroutine(move(6f));
-        */
+        _rb.velocity = new Vector3(direction.x, 0, direction.y) * maxBlobSpeed;
+        _lastVelocity = _rb.velocity;
+        _dragged = false;
+    }
+    public void StartDrag()
+    {
+        _rb.velocity = Vector3.zero;
+        _dragged = true;
     }
     private void MergeIntoAnother(Transform parentBlob)
     {

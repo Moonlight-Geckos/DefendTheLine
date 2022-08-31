@@ -1,56 +1,64 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InteractionPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class InteractionPanel : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler, IPointerUpHandler
 {
     private Vector3 _firstTouch;
-    private bool _isSwiping;
-    private int _screenWidth;
-    private int _screenHeight;
 
     private float _elapsed = 0;
     private float _waitTime = 0.2f;
 
-
+    private Plane _plane;
+    private int _layerMask;
+    private Blob _blob;
+    private Vector2 _lastPos;
     private void Awake()
     {
-        _screenWidth = Screen.width;
-        _screenHeight = Screen.height;
-    }
 
-    void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
-    {
-        _isSwiping = false;
+        _layerMask = LayerMask.GetMask("Tower");
+        _plane = new Plane(Vector3.up, new Vector3(0, 0, 0));
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (_elapsed > 0)
+        var data = (PointerEventData)eventData;
+        _lastPos = data.position;
+        Ray ray = Camera.main.ScreenPointToRay(_lastPos);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
         {
-            return;
+            _blob = hit.transform.GetComponent<Blob>();
+            _blob.StartDrag();
         }
-        _isSwiping = true;
-        _elapsed = _waitTime;
-        _firstTouch = Input.mousePosition;
+    }
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (_blob == null)
+            return;
+
+        _blob.SwipeToDirection(Vector3.zero);
+        _blob = null;
+    }
+
+    public void OnPointerMove(PointerEventData eventData)
+    {
+        if (_blob == null)
+            return;
+        var data = (PointerEventData)eventData;
+        if ((data.position - _lastPos).magnitude < Screen.width / 3f)
+            return;
+        var direction = (data.position - _lastPos).normalized;
+        _blob.SwipeToDirection(direction);
+        _blob = null;
     }
     private void Update()
     {
-        if (_elapsed > 0)
-            _elapsed -= Time.deltaTime;
-        if (!_isSwiping)
-            return;
-        if (Mathf.Abs(Input.mousePosition.x - _firstTouch.x) > _screenWidth / 10.5f)
+        if (Input.GetMouseButtonDown(0))
         {
-            _isSwiping = false;
-            EventsPool.UserSwipedEvent.Invoke(Input.mousePosition.x > _firstTouch.x ? SwipeDirection.Right : SwipeDirection.Left);
-        }
-        else if(Mathf.Abs(Input.mousePosition.y - _firstTouch.y) > _screenHeight / 10.5f)
-        {
-            _isSwiping = false;
-            EventsPool.UserSwipedEvent.Invoke(Input.mousePosition.y > _firstTouch.y ? SwipeDirection.Up : SwipeDirection.Down);
         }
     }
     public void SpawnBlob()
     {
         EventsPool.ShouldSpawnBlobEvent.Invoke();
     }
+
 }
